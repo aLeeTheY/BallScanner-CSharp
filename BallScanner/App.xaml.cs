@@ -1,4 +1,4 @@
-﻿using BallScanner.Data;
+using BallScanner.Data;
 using BallScanner.Data.Tables;
 using NLog;
 using System;
@@ -110,8 +110,8 @@ namespace BallScanner
                 }
                 catch (Exception ex)
                 {
-                    WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                    MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                    MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
             });
 
@@ -148,23 +148,23 @@ namespace BallScanner
                 {
                     case 0:
                         app.ChangeTheme(new Uri("Resources/Palettes/Light/Pink.xaml", UriKind.Relative));
-                        break;                                     
-                    case 1:                                        
+                        break;
+                    case 1:
                         app.ChangeTheme(new Uri("Resources/Palettes/Light/Red.xaml", UriKind.Relative));
-                        break;                                     
-                    case 2:                                        
+                        break;
+                    case 2:
                         app.ChangeTheme(new Uri("Resources/Palettes/Light/Orange.xaml", UriKind.Relative));
-                        break;                                      
-                    case 3:                                         
+                        break;
+                    case 3:
                         app.ChangeTheme(new Uri("Resources/Palettes/Light/Yellow.xaml", UriKind.Relative));
-                        break;                                     
-                    case 4:                                        
+                        break;
+                    case 4:
                         app.ChangeTheme(new Uri("Resources/Palettes/Light/Green.xaml", UriKind.Relative));
-                        break;                                     
-                    case 5:                                        
+                        break;
+                    case 5:
                         app.ChangeTheme(new Uri("Resources/Palettes/Light/Blue.xaml", UriKind.Relative));
-                        break;                                    
-                    case 6:                                       
+                        break;
+                    case 6:
                         app.ChangeTheme(new Uri("Resources/Palettes/Light/Purple.xaml", UriKind.Relative));
                         break;
                 }
@@ -172,12 +172,6 @@ namespace BallScanner
 
         private void OnExit(object sender, ExitEventArgs e)
         {
-            if (CurrentUser != null)
-                CurrentUser = null;
-
-            Logger log = LogManager.GetLogger("Неавторизованный пользователь");
-            log.Info("Выход из приложения!");
-
             try
             {
                 AppDbContext dbContext = AppDbContext.GetInstance();
@@ -185,8 +179,15 @@ namespace BallScanner
             }
             catch (Exception ex)
             {
-                WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                WriteMsg2Log("Ошибка сохранения при выходе: " + GetFullExceptionMessage(ex), LoggerTypes.ERROR);
+            }
+            finally
+            {
+                if (CurrentUser != null)
+                    CurrentUser = null;
+
+                Logger log = LogManager.GetLogger("Неавторизованный пользователь");
+                log.Info("Выход из приложения!");
             }
         }
 
@@ -220,6 +221,30 @@ namespace BallScanner
                         break;
                 }
             }
+        }
+
+        public static string GetFullExceptionMessage(Exception ex)
+        {
+            if (ex == null) return "Unknown error";
+
+            var sb = new System.Text.StringBuilder();
+            var current = ex;
+            int depth = 0;
+
+            while (current != null && depth < 5)
+            {
+                sb.AppendLine($"[{current.GetType().Name}]: {current.Message}");
+                current = current.InnerException;
+                depth++;
+            }
+
+            return sb.ToString();
+        }
+
+        // gettext analog | non-seriously, but it works
+        public static string L(string key)
+        {
+            return Application.Current.TryFindResource(key) as string ?? key;
         }
     }
 }

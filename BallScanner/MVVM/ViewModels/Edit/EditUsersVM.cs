@@ -1,16 +1,86 @@
-﻿using BallScanner.Data;
+using aLeeTheY.Utils.Services;
+using BallScanner.Data;
 using BallScanner.Data.Tables;
 using BallScanner.MVVM.Base;
 using BallScanner.MVVM.Commands;
 using BallScanner.MVVM.ViewModels.Main;
-using Joel.Utils.Services;
 using System;
+using System.Linq;
 using System.Windows;
 
 namespace BallScanner.MVVM.ViewModels.Edit
 {
     public class EditUsersVM : BaseViewModel
     {
+        private const int AdminAccessLevel = 1;
+        private const int ActiveStatus = 1;
+
+        private bool IsLastActiveAdmin()
+        {
+            if (user == null)
+                return false;
+
+            if (user._is_active != ActiveStatus || user._access_level != AdminAccessLevel)
+                return false;
+
+            var dbContext = AppDbContext.GetInstance();
+
+            return !dbContext.Users
+                .ToList()
+                .Any(u =>
+                    u._id != user._id &&
+                    u._is_active == ActiveStatus &&
+                    u._access_level == AdminAccessLevel);
+        }
+
+        private bool CanChangeAccessLevel(int newAccessLevel)
+        {
+            if (newAccessLevel == AdminAccessLevel)
+                return true;
+
+            if (!IsLastActiveAdmin())
+                return true;
+
+            App.WriteMsg2Log(
+                "Попытка понизить последнего активного администратора. " +
+                "Информация о пользователе: номер = " + user._id +
+                "; логин = " + user._username + ";",
+                LoggerTypes.WARN);
+
+            MessageBox.Show(
+                App.L("LangRes_Msg_CannotDowngradeLastAdmin"),
+                App.L("LangRes_Msg_TitleWarning"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning,
+                MessageBoxResult.OK);
+
+            return false;
+        }
+
+        private bool CanChangeActiveStatus(int newActiveStatus)
+        {
+            if (newActiveStatus == ActiveStatus)
+                return true;
+
+            if (!IsLastActiveAdmin())
+                return true;
+
+            App.WriteMsg2Log(
+                "Попытка деактивировать последнего активного администратора. " +
+                "Информация о пользователе: номер = " + user._id +
+                "; логин = " + user._username + ";",
+                LoggerTypes.WARN);
+
+            MessageBox.Show(
+                App.L("LangRes_Msg_CannotDeactivateLastAdmin"),
+                App.L("LangRes_Msg_TitleWarning"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning,
+                MessageBoxResult.OK);
+
+            return false;
+        }
+
         public RelayCommand DeleteReportCommand { get; set; }
         public RelayCommand ChangePasswordCommand { get; set; }
 
@@ -19,7 +89,7 @@ namespace BallScanner.MVVM.ViewModels.Edit
 
         public string Title_Text
         {
-            get => "Редактирование пользователей. Пользователь #" + user._id;
+            get => App.L("LangRes_EditUsersWindow_Title") + user._id;
         }
 
         // Fields
@@ -100,6 +170,24 @@ namespace BallScanner.MVVM.ViewModels.Edit
             {
                 if (user._access_level == value) return;
 
+                if (!CanChangeAccessLevel(value))
+                {
+                    int oldValue = user._access_level;
+
+                    // 1) Делаем вид, что приняли значение — ComboBox успокаивается
+                    user._access_level = value;
+                    OnPropertyChanged(nameof(Access_Level));
+
+                    // 2) На следующем проходе Dispatcher'а возвращаем старое и уведомляем
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        user._access_level = oldValue;
+                        OnPropertyChanged(nameof(Access_Level));
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+
+                    return;
+                }
+
                 user._access_level = value;
                 OnPropertyChanged(nameof(Access_Level));
 
@@ -113,6 +201,24 @@ namespace BallScanner.MVVM.ViewModels.Edit
             set
             {
                 if (user._is_active == value) return;
+
+                if (!CanChangeActiveStatus(value))
+                {
+                    int oldValue = user._is_active;
+
+                    // 1) Делаем вид, что приняли значение — ComboBox успокаивается
+                    user._is_active = value;
+                    OnPropertyChanged(nameof(Is_Active));
+
+                    // 2) На следующем проходе Dispatcher'а возвращаем старое и уведомляем
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        user._is_active = oldValue;
+                        OnPropertyChanged(nameof(Is_Active));
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+
+                    return;
+                }
 
                 user._is_active = value;
                 OnPropertyChanged(nameof(Is_Active));
@@ -190,14 +296,14 @@ namespace BallScanner.MVVM.ViewModels.Edit
             if (user == App.CurrentUser)
             {
                 App.WriteMsg2Log("Попытка удалить авторизованного пользователя (самого себя)!", LoggerTypes.ERROR);
-                MessageBox.Show("Нельзя удалить авторизованного пользователя!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                MessageBox.Show(App.L("LangRes_Msg_CannotDeleteSelf"), App.L("LangRes_Msg_TitleError"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
-            
+
             if (user.Reports != null && user.Reports.Count != 0)
             {
                 App.WriteMsg2Log("Попытка удалить пользователя, у которого есть отчёты в базе данных!", LoggerTypes.ERROR);
-                MessageBox.Show("У данного пользователя есть отчёты в базе данных!\nЧтобы удалить данного пользователя, нужно сначала\nудалить все его отчёты!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                MessageBox.Show(App.L("LangRes_Msg_CannotDeleteUserWithReports"), App.L("LangRes_Msg_TitleError"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
 
@@ -215,8 +321,8 @@ namespace BallScanner.MVVM.ViewModels.Edit
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
         }
 
@@ -226,7 +332,7 @@ namespace BallScanner.MVVM.ViewModels.Edit
             if (NewPassword == null || NewPassword.Equals(""))
             {
                 App.WriteMsg2Log("Предупреждение пользователя! Поле \"Новый пароль\" пустое!", LoggerTypes.WARN);
-                MessageBox.Show("Вы не указали новый пароль для авторизации!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                MessageBox.Show(App.L("LangRes_Msg_NoNewPassword"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 return;
             }
 
@@ -234,7 +340,7 @@ namespace BallScanner.MVVM.ViewModels.Edit
             if (NewPassword_Check == null || NewPassword_Check.Equals(""))
             {
                 App.WriteMsg2Log("Предупреждение пользователя! Поле \"Повторите новый пароль\" пустое!", LoggerTypes.WARN);
-                MessageBox.Show("Вы не указали повтор нового пароля для проверки!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                MessageBox.Show(App.L("LangRes_Msg_NoNewPasswordRepeat"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 return;
             }
 
@@ -242,7 +348,7 @@ namespace BallScanner.MVVM.ViewModels.Edit
             if (NewPassword.Length < 4 || NewPassword_Check.Length < 4)
             {
                 App.WriteMsg2Log("Предупреждение пользователя! Длина пароля или повтора пароля меньше 4-х символов!", LoggerTypes.WARN);
-                MessageBox.Show("Длина пароля меньше 4-х символов!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                MessageBox.Show(App.L("LangRes_Msg_PasswordTooShort"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 return;
             }
 
@@ -250,14 +356,14 @@ namespace BallScanner.MVVM.ViewModels.Edit
             if (!NewPassword.Equals(NewPassword_Check))
             {
                 App.WriteMsg2Log("Предупреждение пользователя! Пароли не совпадают!", LoggerTypes.WARN);
-                MessageBox.Show("Пароли не совпадают!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                MessageBox.Show(App.L("LangRes_Msg_PasswordsMismatch"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 return;
             }
 
             user._password_hash = SHAService.ComputeSha256Hash(NewPassword);
 
             App.WriteMsg2Log("Изменение пароля для пользователя. Информация о пользователе: номер = " + user._id + "; фамилия = " + user._surname + "; имя = " + user._name + "; отчество = " + user._lastname + "; логин = " + user._username + "; номер смены = " + user._smena_number + "; уровень доступа = " + user.Access_Level + "; статус аккаунта = " + user.Is_Active + ";", LoggerTypes.INFO);
-            MessageBox.Show("Пароль был успешно изменён!", "Уведомление!", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            MessageBox.Show(App.L("LangRes_Msg_PasswordChanged"), App.L("LangRes_Msg_TitleInfo"), MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿//using System;
+//using System;
 //using System.Diagnostics;
 //using System.Drawing;
 using System;
@@ -147,8 +147,8 @@ namespace BallScanner.MVVM.Views.Main
                 return left.GetHashCode() + top.GetHashCode() + right.GetHashCode() + bottom.GetHashCode();
             }
 
-            public static bool operator == (MyRect rect1, MyRect rect2) => rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom;
-            public static bool operator != (MyRect rect1, MyRect rect2) => !(rect1 == rect2);
+            public static bool operator ==(MyRect rect1, MyRect rect2) => rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom;
+            public static bool operator !=(MyRect rect1, MyRect rect2) => !(rect1 == rect2);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]

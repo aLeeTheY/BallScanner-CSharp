@@ -1,43 +1,272 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <!-- Заголовки блоков -->
-    <sys:String x:Key="Text_Menu">Menu</sys:String>
+    <!-- * Menu component -->
+    <sys:String x:Key="LangRes_MenuComponent_BlockLabel">Menu</sys:String>
 
-    <!-- Пункты меню -->
-    <sys:String x:Key="Text_AccountManagment">Administration</sys:String>
-    <sys:String x:Key="Text_Account">Account</sys:String>
-    <sys:String x:Key="Text_Scan">Scan</sys:String>
-    <sys:String x:Key="Text_Calibrate">Calibration</sys:String>
-    <sys:String x:Key="Text_Documents">Reports</sys:String>
-    <sys:String x:Key="Text_Settings">Settings</sys:String>
-    <sys:String x:Key="Text_About">About</sys:String>
-    
-    <!-- Страница "Калибровка" -->
-    <sys:String x:Key="Text_OutputImage">Output image</sys:String>
-    <sys:String x:Key="Text_Sensitivity">Sensitivity</sys:String>
-    <sys:String x:Key="Text_Thresholds">Thresholds</sys:String>
-    <sys:String x:Key="Text_GeneralScanResults">General scan results</sys:String>
-    <sys:String x:Key="Text_DetailedScanResults">Detailed scan results</sys:String>
-    <sys:String x:Key="Text_Status">Status</sys:String>
-    <sys:String x:Key="Text_Calibration">Calibration</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_AccountManagmentBtn">Administration</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_AccountBtn">Account</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_ScanBtn">Scanning</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_CalibrateBtn">Calibration</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_DocumentsBtn">Reports</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_SettingsBtn">Settings</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_AboutBtn">About</sys:String>
 
-    <sys:String x:Key="Text_Download">Download</sys:String>
-    <sys:String x:Key="Text_Previous">Previous</sys:String>
-    <sys:String x:Key="Text_Next">Next</sys:String>
-    <sys:String x:Key="Text_Execute">Execute</sys:String>
-    
-    <!-- Страница "Настройки" -->
-    <sys:String x:Key="Text_Language">Language</sys:String>
-    <sys:String x:Key="Text_Theme">Theme</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_AccountLogoutBtn">Sign out</sys:String>
+    <sys:String x:Key="LangRes_MenuComponent_CollapseExpandBtn">Collapse</sys:String>
 
-    <sys:String x:Key="Text_Language_Russian">Russian, Russia</sys:String>
-    <sys:String x:Key="Text_Language_English">English, USA</sys:String>
+    <!-- * Page "Administration" -->
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchBlockLabel">Search criteria</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_UserListBlockLabel">User list</sys:String>
 
-    <sys:String x:Key="Text_Theme_Light">Light - beta</sys:String>
-    <sys:String x:Key="Text_Theme_Dark">Dark</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchCriteria_Login">Login</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchCriteria_Surname">Surname</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchCriteria_Name">Name</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchCriteria_Lastname">Middle name</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchCriteria_SmenaNumber">Shift number</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchCriteria_AccessLevel">Access level</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchCriteria_AccountStatus">Account status</sys:String>
 
-    <sys:String x:Key="Text_Copyright">Copyright © 2022 Nikulin V.S. All rights reserved.</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_SearchValueLabel">Enter search query</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_AddAccountBtn">Add account</sys:String>
+
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_Number">No.</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_Login">Login</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_Surname">Surname</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_Name">Name</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_Lastname">Middle name</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_SmenaNumber">Shift number</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_AccessLevel">Access level</sys:String>
+    <sys:String x:Key="LangRes_AccountManagementPage_Column_AccountStatus">Account status</sys:String>
+
+    <!-- * Page "Account" -->
+    <sys:String x:Key="LangRes_AccountPage_GeneralInfoBlockLabel">User information</sys:String>
+
+    <sys:String x:Key="LangRes_AccountPage_Column_Login">Login</sys:String>
+    <sys:String x:Key="LangRes_AccountPage_Column_Surname">Surname</sys:String>
+    <sys:String x:Key="LangRes_AccountPage_Column_Name">Name</sys:String>
+    <sys:String x:Key="LangRes_AccountPage_Column_Lastname">Middle name</sys:String>
+    <sys:String x:Key="LangRes_AccountPage_Column_SmenaNumber">Shift number</sys:String>
+    <sys:String x:Key="LangRes_AccountPage_Column_AccessLevel">Access level</sys:String>
+
+    <!-- * Page "Calibration" -->
+    <sys:String x:Key="LangRes_CalibratePage_OutputImageBlockLabel">Current image</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_SensitivityBlockLabel">Sensitivity adjustment</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_ThresholdsBlockLabel">Threshold adjustment</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_GeneralScanResultsBlockLabel">General scan results</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_DetailedScanResultsBlockLabel">Per-file scan results</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_StatusBlockLabel">Status panel</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_CalibrationBlockLabel">Scanner calibration</sys:String>
+
+    <sys:String x:Key="LangRes_CalibratePage_DownloadBtn">Load</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_PreviousBtn">Previous</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_NextBtn">Next</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_ExecuteBtn">Start</sys:String>
+
+    <sys:String x:Key="LangRes_CalibratePage_FirstGradeLabel">First grade</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_SecondGradeLabel">Second grade</sys:String>
+
+    <sys:String x:Key="LangRes_CalibratePage_Column_Number">No.</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_Column_FileName">File</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_Column_BlackPixelCount">Black px</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_Column_Grade">Grade</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_Column_AvgBlackPixels">Avg. black px</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_Column_CheckedImages">Checked</sys:String>
+    <sys:String x:Key="LangRes_CalibratePage_Column_TotalImages">Total</sys:String>
+
+    <!-- * Page "Scanning" -->
+    <sys:String x:Key="LangRes_ScanPage_OutputImageBlockLabel">Current image</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_SaveReportBlockLabel">Save report</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_ScannerParamsBlockLabel">Scanner configuration</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_GeneralScanResultsBlockLabel">General scan results</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_DetailedScanResultsBlockLabel">Per-file scan results</sys:String>
+
+    <sys:String x:Key="LangRes_ScanPage_FractionLabel">Fraction</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_PartiaNumberLabel">Batch number</sys:String>
+
+    <sys:String x:Key="LangRes_ScanPage_DownloadBtn">Load</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_PreviousBtn">Previous</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_NextBtn">Next</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_ExecuteBtn">Start</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_SaveBtn">Save</sys:String>
+
+    <sys:String x:Key="LangRes_ScanPage_SensitivityLabel">Sens.</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_FirstGradeLabel">First grade</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_SecondGradeLabel">Second grade</sys:String>
+
+    <sys:String x:Key="LangRes_ScanPage_Column_Number">No.</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_Column_FileName">File</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_Column_BlackPixelCount">Black px</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_Column_Grade">Grade</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_Column_AvgBlackPixels">Avg. black px</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_Column_CheckedImages">Checked</sys:String>
+    <sys:String x:Key="LangRes_ScanPage_Column_TotalImages">Total</sys:String>
+
+    <!-- * Page "Reports" -->
+    <sys:String x:Key="LangRes_DocumentsPage_SearchBlockLabel">Search criteria</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_HistoryBlockLabel">Report list</sys:String>
+
+    <sys:String x:Key="LangRes_DocumentsPage_SearchCriteria_Date">Date</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_SearchCriteria_Fraction">Fraction</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_SearchCriteria_PartiaNumber">Batch number</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_SearchCriteria_SmenaNumber">Shift number</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_SearchCriteria_Value">Value</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_SearchCriteria_Note">Note</sys:String>
+
+    <sys:String x:Key="LangRes_DocumentsPage_SearchValueLabel">Enter search query</sys:String>
+
+    <sys:String x:Key="LangRes_DocumentsPage_Column_Number">No.</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_Column_Date">Date</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_Column_Fraction">Fraction</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_Column_PartiaNumber">Batch number</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_Column_SmenaNumber">Shift number</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_Column_Value">Value</sys:String>
+    <sys:String x:Key="LangRes_DocumentsPage_Column_Note">Note</sys:String>
+
+    <!-- * Page "Settings" -->
+    <sys:String x:Key="LangRes_SettingsPage_LanguageBlockLabel">Language</sys:String>
+    <sys:String x:Key="LangRes_SettingsPage_ThemeBlockLabel">Theme</sys:String>
+
+    <sys:String x:Key="LangRes_SettingsPage_Language_Russian">Russian, Russia</sys:String>
+    <sys:String x:Key="LangRes_SettingsPage_Language_English">English, USA</sys:String>
+
+    <sys:String x:Key="LangRes_SettingsPage_Language_Russian_AlwaysOnRussian">Русский, Россия</sys:String>
+    <sys:String x:Key="LangRes_SettingsPage_Language_English_AlwaysOnEnglish">English, USA</sys:String>
+
+    <sys:String x:Key="LangRes_SettingsPage_Theme_Light">Light - beta</sys:String>
+    <sys:String x:Key="LangRes_SettingsPage_Theme_Dark">Dark</sys:String>
+
+    <!-- * Page "About" -->
+    <sys:String x:Key="LangRes_AboutPage_ProgramInfoBlockLabel">Product information</sys:String>
+    <sys:String x:Key="LangRes_AboutPage_LicensesBlockLabel">License information</sys:String>
+
+    <sys:String x:Key="LangRes_AboutPage_ApprovedLicense">Software license issued to:</sys:String>
+    <sys:String x:Key="LangRes_AboutPage_ProductUser">- Demo version. Not for commercial use.</sys:String>
+
+    <sys:String x:Key="LangRes_AboutPage_Copyright">Copyright © 2021-2026 aLeeTheY. All rights reserved.</sys:String>
+
+    <!-- * Window "Add user" -->
+    <sys:String x:Key="LangRes_RegistrationWindow_BlockLabel">Add new user</sys:String>
+
+    <sys:String x:Key="LangRes_RegistrationWindow_RequiredSurnameLabel">* Surname</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_RequiredNameLabel">* Name</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_LastnameLabel">Middle name</sys:String>
+
+    <sys:String x:Key="LangRes_RegistrationWindow_RequiredLoginLabel">* Login</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_RequiredSmenaNumberLabel">* Shift number</sys:String>
+
+    <sys:String x:Key="LangRes_RegistrationWindow_RequiredPasswordLabel">* Password</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_RequiredPasswordRepeatLabel">* Repeat password</sys:String>
+
+    <sys:String x:Key="LangRes_RegistrationWindow_AddBtn">Add</sys:String>
+
+    <sys:String x:Key="LangRes_RegistrationWindow_HintText__Part_1">Fields marked with an asterisk are required.</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_HintText__Part_2">Password must be at least 4 characters long.</sys:String>
+
+    <!-- * Window "Edit report" -->
+    <sys:String x:Key="LangRes_EditReportsWindow_DateLabel">Date</sys:String>
+    <sys:String x:Key="LangRes_EditReportsWindow_SmenaNumberLabel">Shift number</sys:String>
+    <sys:String x:Key="LangRes_EditReportsWindow_ValueLabel">Value</sys:String>
+    <sys:String x:Key="LangRes_EditReportsWindow_FractionLabel">Fraction</sys:String>
+    <sys:String x:Key="LangRes_EditReportsWindow_PartiaNumberLabel">Batch number</sys:String>
+    <sys:String x:Key="LangRes_EditReportsWindow_NoteLabel">Note</sys:String>
+    <sys:String x:Key="LangRes_EditReportsWindow_DeleteBtn">Delete</sys:String>
+
+    <!-- * Window "Edit user" -->
+    <sys:String x:Key="LangRes_EditUsersWindow_SurnameLabel">Surname</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_NameLabel">Name</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_LastnameLabel">Middle name</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_LoginLabel">Login</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_SmenaNumberLabel">Shift number</sys:String>
+
+    <sys:String x:Key="LangRes_EditUsersWindow_AccessLevelLabel">Access level</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_AccessLevel_User">User</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_AccessLevel_Admin">Administrator</sys:String>
+
+    <sys:String x:Key="LangRes_EditUsersWindow_AccountStatusLabel">Account status</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_AccountStatus_Inactive">Inactive</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_AccountStatus_Active">Active</sys:String>
+
+    <sys:String x:Key="LangRes_EditUsersWindow_ChangePasswordBlockLabel">Change user password</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_NewPasswordLabel">Enter new password</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_NewPasswordRepeatLabel">Repeat new password</sys:String>
+
+    <sys:String x:Key="LangRes_EditUsersWindow_ChangePasswordBtn">Change password</sys:String>
+    <sys:String x:Key="LangRes_EditUsersWindow_DeleteAccountBtn">Delete account</sys:String>
+
+    <!-- * Window "Authorization" -->
+    <sys:String x:Key="LangRes_LoginWindow_AuthBlockLabel">Authorization</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_LoginLabel">Login</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_PasswordLabel">Password</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_LoginBtn">Sign in</sys:String>
+
+    <!-- * Code Inline Text -->
+    <!-- Grade and status values -->
+    <sys:String x:Key="LangRes_Grade_First">First</sys:String>
+    <sys:String x:Key="LangRes_Grade_Second">Second</sys:String>
+    <sys:String x:Key="LangRes_Grade_NotMatching">N/M</sys:String>
+
+    <sys:String x:Key="LangRes_Status_Active">Active</sys:String>
+    <sys:String x:Key="LangRes_Status_Inactive">Inactive</sys:String>
+
+    <sys:String x:Key="LangRes_AccessLevel_User">User</sys:String>
+    <sys:String x:Key="LangRes_AccessLevel_Admin">Administrator</sys:String>
+    <sys:String x:Key="LangRes_AccessLevel_NotAuthorized">Not authorized</sys:String>
+    <sys:String x:Key="LangRes_AccessLevel_Unknown">Unknown</sys:String>
+
+    <!-- Window titles -->
+    <sys:String x:Key="LangRes_EditUsersWindow_Title">Edit user #</sys:String>
+    <sys:String x:Key="LangRes_EditReportsWindow_Title">Edit report #</sys:String>
+
+    <!-- About -->
+    <sys:String x:Key="LangRes_AboutPage_Version">Version:</sys:String>
+    <sys:String x:Key="LangRes_AboutPage_BuildDate">Build date:</sys:String>
+
+    <!-- * === MessageBox messages === -->
+    <!-- Window titles -->
+    <sys:String x:Key="LangRes_Msg_TitleWarning">Warning</sys:String>
+    <sys:String x:Key="LangRes_Msg_TitleError">Error</sys:String>
+    <sys:String x:Key="LangRes_Msg_TitleInfo">Information</sys:String>
+    <sys:String x:Key="LangRes_Msg_TitleUnexpected">Unexpected error</sys:String>
+    <sys:String x:Key="LangRes_Msg_TitleFileNotFound">FileNotFoundException error</sys:String>
+    <sys:String x:Key="LangRes_Msg_TitleArgument">ArgumentException error</sys:String>
+    <sys:String x:Key="LangRes_Msg_TitleUriFormat">UriFormatException error</sys:String>
+
+    <!-- Prefixes -->
+    <sys:String x:Key="LangRes_Msg_ErrorPrefix">Error: </sys:String>
+
+    <!-- Authorization -->
+    <sys:String x:Key="LangRes_Msg_EnterCredentials">Please enter your credentials.</sys:String>
+    <sys:String x:Key="LangRes_Msg_InvalidCredentials">Invalid login or password.</sys:String>
+
+    <!-- Registration -->
+    <sys:String x:Key="LangRes_Msg_NoSurname">You did not enter the user's surname.</sys:String>
+    <sys:String x:Key="LangRes_Msg_NoName">You did not enter the user's name.</sys:String>
+    <sys:String x:Key="LangRes_Msg_NoLogin">You did not enter the user's login.</sys:String>
+    <sys:String x:Key="LangRes_Msg_NoSmenaNumber">You did not enter the user's shift number.</sys:String>
+    <sys:String x:Key="LangRes_Msg_NoPassword">You did not enter the password.</sys:String>
+    <sys:String x:Key="LangRes_Msg_NoPasswordRepeat">You did not confirm the password.</sys:String>
+    <sys:String x:Key="LangRes_Msg_PasswordTooShort">Password must be at least 4 characters long.</sys:String>
+    <sys:String x:Key="LangRes_Msg_PasswordsMismatch">Passwords do not match.</sys:String>
+    <sys:String x:Key="LangRes_Msg_SmenaMaxValue">Maximum shift number value is </sys:String>
+    <sys:String x:Key="LangRes_Msg_SmenaDigitsOnly">Shift number must contain digits only.</sys:String>
+    <sys:String x:Key="LangRes_Msg_LoginAlreadyExists">A user with this login already exists. Please choose another one.</sys:String>
+
+    <!-- Save report -->
+    <sys:String x:Key="LangRes_Msg_SaveSuccess">Report saved successfully.</sys:String>
+
+    <!-- Change password -->
+    <sys:String x:Key="LangRes_Msg_NoNewPassword">You did not enter the new password.</sys:String>
+    <sys:String x:Key="LangRes_Msg_NoNewPasswordRepeat">You did not confirm the new password.</sys:String>
+    <sys:String x:Key="LangRes_Msg_PasswordChanged">Password changed successfully.</sys:String>
+
+    <!-- User editing -->
+    <sys:String x:Key="LangRes_Msg_CannotDowngradeLastAdmin">Cannot downgrade the last active administrator. At least one active administrator must remain in the system!</sys:String>
+    <sys:String x:Key="LangRes_Msg_CannotDeactivateLastAdmin">Cannot deactivate the last active administrator. At least one active administrator must remain in the system!</sys:String>
+
+    <!-- Delete user -->
+    <sys:String x:Key="LangRes_Msg_CannotDeleteSelf">You cannot delete the currently logged-in user.</sys:String>
+    <sys:String x:Key="LangRes_Msg_CannotDeleteUserWithReports">This user has reports in the database. Delete all their reports first.</sys:String>
 
 </ResourceDictionary>

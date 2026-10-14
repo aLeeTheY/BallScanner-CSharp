@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.ViewModels.Edit;
+using BallScanner.MVVM.ViewModels.Edit;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;

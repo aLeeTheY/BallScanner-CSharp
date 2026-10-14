@@ -1,4 +1,4 @@
-﻿using BallScanner.Data;
+using BallScanner.Data;
 using BallScanner.Data.Tables;
 using BallScanner.MVVM.Base;
 using BallScanner.MVVM.Commands;
@@ -80,8 +80,8 @@ namespace BallScanner.MVVM.ViewModels.Main
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
 
             timer.Elapsed += new ElapsedEventHandler(OnSearch);
@@ -184,11 +184,13 @@ namespace BallScanner.MVVM.ViewModels.Main
                         switch (Search_Value.ToUpper())
                         {
                             case "ПОЛЬЗОВАТЕЛЬ":
+                            case "USER":
                                 search_result = (from user in dbContext.Users
                                                  where user._access_level == 0
                                                  select user).ToList();
                                 break;
                             case "АДМИНИСТРАТОР":
+                            case "ADMINISTRATOR":
                                 search_result = (from user in dbContext.Users
                                                  where user._access_level == 1
                                                  select user).ToList();
@@ -211,11 +213,13 @@ namespace BallScanner.MVVM.ViewModels.Main
                         switch (Search_Value.ToUpper())
                         {
                             case "АКТИВЕН":
+                            case "ACTIVE":
                                 search_result = (from user in dbContext.Users
                                                  where user._is_active == 1
                                                  select user).ToList();
                                 break;
                             case "НЕАКТИВЕН":
+                            case "INACTIVE":
                                 search_result = (from user in dbContext.Users
                                                  where user._is_active == 0
                                                  select user).ToList();
@@ -235,8 +239,8 @@ namespace BallScanner.MVVM.ViewModels.Main
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Непредвиденнная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                App.WriteMsg2Log("Непредвиденнная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
         }
 

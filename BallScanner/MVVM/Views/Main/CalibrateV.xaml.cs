@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.ViewModels.Main;
+using BallScanner.MVVM.ViewModels.Main;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,7 +41,7 @@ namespace BallScanner.MVVM.Views.Main
         //    {
         //        blockHeader.FontSize += 0.5;
         //    }
-            
+
         //    blockHeader.FontSize -= 0.5;
         //}
 
@@ -92,7 +92,7 @@ namespace BallScanner.MVVM.Views.Main
 
             if (e.NewSize.Width < 1007)
             {
-                if (MyContentControl.ContentTemplate == MinState) return; 
+                if (MyContentControl.ContentTemplate == MinState) return;
                 MyContentControl.ContentTemplate = MinState;
 
                 isMinState = true;
@@ -123,7 +123,7 @@ namespace BallScanner.MVVM.Views.Main
                         sv.ScrollToVerticalOffset(sv.ContentVerticalOffset - e.Delta);
                     }
                 }
-            }            
+            }
         }
 
         // Поиск элемента в DataTemplate

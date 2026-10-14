@@ -1,4 +1,4 @@
-﻿using BallScanner.Data.Tables;
+using BallScanner.Data.Tables;
 using System.Data.Entity;
 
 namespace BallScanner.Data
@@ -11,6 +11,12 @@ namespace BallScanner.Data
         // Entities
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
+
+        static AppDbContext()
+        {
+            // Говорим EF: не проверять существование БД, не создавать её, не обновлять.
+            Database.SetInitializer<AppDbContext>(null);
+        }
 
         private AppDbContext() : base("DefaultConnection") { }
 

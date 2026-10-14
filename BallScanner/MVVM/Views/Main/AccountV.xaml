@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:joel="clr-namespace:Joel.Controls;assembly=Joel.Controls"
+             xmlns:aleethey="clr-namespace:aLeeTheY.Controls;assembly=aLeeTheY.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -17,8 +17,8 @@
             <!-- Info for current image -->
             <StackPanel Orientation="Vertical">
 
-                <joel:BlockHeader DockPanel.Dock="Top"
-                                  Text="Общая информация" />
+                <aleethey:BlockHeader DockPanel.Dock="Top"
+                                  Text="{DynamicResource LangRes_AccountPage_GeneralInfoBlockLabel}" />
 
                 <Grid Margin="0,7,0,0"
                       Background="#29000000">
@@ -47,7 +47,7 @@
                             Grid.Row="0"
                             Background="{DynamicResource Brush_Primary}" />
 
-                    <TextBlock Text="Логин"
+                    <TextBlock Text="{DynamicResource LangRes_AccountPage_Column_Login}"
                                Margin="7,0,0,0"
                                Style="{StaticResource DataGridParody_Header}"
                                Grid.Column="0"
@@ -57,7 +57,7 @@
                                   Grid.Row="0"
                                   Background="{DynamicResource Brush_OnPrimary}" />
                     
-                    <TextBlock Text="Фамилия"
+                    <TextBlock Text="{DynamicResource LangRes_AccountPage_Column_Surname}"
                                Style="{StaticResource DataGridParody_Header}"
                                Grid.Column="2"
                                Grid.Row="0" />
@@ -66,7 +66,7 @@
                                   Grid.Row="0"
                                   Background="{DynamicResource Brush_OnPrimary}" />
 
-                    <TextBlock Text="Имя"
+                    <TextBlock Text="{DynamicResource LangRes_AccountPage_Column_Name}"
                                Style="{StaticResource DataGridParody_Header}"
                                Grid.Column="4"
                                Grid.Row="0" />
@@ -75,7 +75,7 @@
                                   Grid.Row="0"
                                   Background="{DynamicResource Brush_OnPrimary}" />
 
-                    <TextBlock Text="Отчество"
+                    <TextBlock Text="{DynamicResource LangRes_AccountPage_Column_Lastname}"
                                Style="{StaticResource DataGridParody_Header}"
                                Grid.Column="6"
                                Grid.Row="0" />
@@ -84,7 +84,7 @@
                                   Grid.Row="0"
                                   Background="{DynamicResource Brush_OnPrimary}" />
 
-                    <TextBlock Text="Номер смены"
+                    <TextBlock Text="{DynamicResource LangRes_AccountPage_Column_SmenaNumber}"
                                Style="{StaticResource DataGridParody_Header}"
                                Grid.Column="8"
                                Grid.Row="0" />
@@ -93,7 +93,7 @@
                                   Grid.Row="0"
                                   Background="{DynamicResource Brush_OnPrimary}" />
 
-                    <TextBlock Text="Уровень доступа"
+                    <TextBlock Text="{DynamicResource LangRes_AccountPage_Column_AccessLevel}"
                                Style="{StaticResource DataGridParody_Header}"
                                Margin="0,0,8,0"
                                Grid.Column="10"

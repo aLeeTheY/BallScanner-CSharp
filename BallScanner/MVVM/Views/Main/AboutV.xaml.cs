@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Windows.Controls;
 
@@ -15,8 +15,8 @@ namespace BallScanner.MVVM.Views.Main
             TimeSpan.TicksPerDay * version.Build + // days since 1 January 2000
             TimeSpan.TicksPerSecond * 2 * version.Revision)); // seconds since midnight, (multiply by 2 to get original)
 
-            Version_Field.Text = "Версия: " + version.ToString() + " beta";
-            Build_Field.Text = "Сборка от: " + buildDateTime.ToString("dd-MM-yyyy");
+            Version_Field.Text = App.L("LangRes_AboutPage_Version") + " " + version.ToString() + " (beta)";
+            Build_Field.Text = App.L("LangRes_AboutPage_BuildDate") + " " + buildDateTime.ToString("dd-MM-yyyy");
         }
     }
 }

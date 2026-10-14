@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:joel="clr-namespace:Joel.Controls;assembly=Joel.Controls"
+             xmlns:aleethey="clr-namespace:aLeeTheY.Controls;assembly=aLeeTheY.Controls"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -25,20 +25,20 @@
                      MaxWidth="180"
                      Name="MyLogo" />
 
-            <joel:JustButton DockPanel.Dock="Bottom"
+            <aleethey:JustButton DockPanel.Dock="Bottom"
                              Name="MyLogoutButton"
                              Command="{Binding Logout_Command}"
                              Icon="{StaticResource Geometry_Icon_Logout}"
                              IconFill="{DynamicResource Brush_OnBackground_OnSurface_High}"
-                             ContentStringFormat="Выйти" 
+                             ContentStringFormat="{DynamicResource LangRes_MenuComponent_AccountLogoutBtn}" 
                              IsMinState="{DynamicResource IsMinStateForMenu}" />
             
-            <joel:JustButton DockPanel.Dock="Bottom"
+            <aleethey:JustButton DockPanel.Dock="Bottom"
                              Name="MyCollapseButton"
                              Click="MyCollapseButton_Click"
                              Icon="{StaticResource Geometry_Icon_ExpandLess}"
                              IconFill="{DynamicResource Brush_OnBackground_OnSurface_High}"
-                             ContentStringFormat="Свернуть" 
+                             ContentStringFormat="{DynamicResource LangRes_MenuComponent_CollapseExpandBtn}" 
                              IsMinState="{DynamicResource IsMinStateForMenu}" />
 
             <Grid>
@@ -47,8 +47,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <joel:BlockHeader Name="MyBlockHeader"
-                                  Text="{DynamicResource Text_Menu}"
+                <aleethey:BlockHeader Name="MyBlockHeader"
+                                  Text="{DynamicResource LangRes_MenuComponent_BlockLabel}"
                                   TextAlignment="Center"
                                   Margin="0,0,0,7" />
 
@@ -58,13 +58,10 @@
                 
                     <StackPanel Orientation="Vertical"
                                 Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=Width, UpdateSourceTrigger=PropertyChanged}">
-                    
-                        <!--<joel:BlockHeader Text="{DynamicResource Text_Menu}"
-                                          TextAlignment="Center" />-->
 
-                        <joel:MenuButton Icon="{StaticResource Geometry_Icon_AccountManagment}"
+                        <aleethey:MenuButton Icon="{StaticResource Geometry_Icon_AccountManagment}"
                                          IconFill="{DynamicResource Brush_Primary_Pink}"
-                                         ContentStringFormat="{DynamicResource Text_AccountManagment}"
+                                         ContentStringFormat="{DynamicResource LangRes_MenuComponent_AccountManagmentBtn}"
                                          Command="{Binding MenuButtonClick}"
                                          CommandParameter="AccountManagment" 
                                          Margin="0"
@@ -73,49 +70,49 @@
                                          Visibility="Collapsed"
                                          IsEnabled="False" />
                         
-                        <joel:MenuButton Icon="{StaticResource Geometry_Icon_Account}"
+                        <aleethey:MenuButton Icon="{StaticResource Geometry_Icon_Account}"
                                          IconFill="{DynamicResource Brush_Primary_Red}"
-                                         ContentStringFormat="{DynamicResource Text_Account}"
+                                         ContentStringFormat="{DynamicResource LangRes_MenuComponent_AccountBtn}"
                                          Command="{Binding MenuButtonClick}"
                                          CommandParameter="Account" 
                                          IsMinState="{DynamicResource IsMinStateForMenu}"
                                          Name="AccountButton" />
 
-                        <joel:MenuButton Icon="{StaticResource Geometry_Icon_Scan}"
+                        <aleethey:MenuButton Icon="{StaticResource Geometry_Icon_Scan}"
                                          IconFill="{DynamicResource Brush_Primary_Orange}"
-                                         ContentStringFormat="{DynamicResource Text_Scan}"
+                                         ContentStringFormat="{DynamicResource LangRes_MenuComponent_ScanBtn}"
                                          Command="{Binding MenuButtonClick}"
                                          CommandParameter="Scan" 
                                          IsMinState="{DynamicResource IsMinStateForMenu}"
                                          Name="ScanButton" />
 
-                        <joel:MenuButton Icon="{StaticResource Geometry_Icon_Calibrate}"
+                        <aleethey:MenuButton Icon="{StaticResource Geometry_Icon_Calibrate}"
                                          IconFill="{DynamicResource Brush_Primary_Yellow}"
-                                         ContentStringFormat="{DynamicResource Text_Calibrate}"
+                                         ContentStringFormat="{DynamicResource LangRes_MenuComponent_CalibrateBtn}"
                                          Command="{Binding MenuButtonClick}"
                                          CommandParameter="Calibrate" 
                                          IsMinState="{DynamicResource IsMinStateForMenu}"
                                          Name="CalibrateButton" />
 
-                        <joel:MenuButton Icon="{StaticResource Geometry_Icon_Documents}"
+                        <aleethey:MenuButton Icon="{StaticResource Geometry_Icon_Documents}"
                                          IconFill="{DynamicResource Brush_Primary_Green}"
-                                         ContentStringFormat="{DynamicResource Text_Documents}"
+                                         ContentStringFormat="{DynamicResource LangRes_MenuComponent_DocumentsBtn}"
                                          Command="{Binding MenuButtonClick}"
                                          CommandParameter="Documents" 
                                          IsMinState="{DynamicResource IsMinStateForMenu}"
                                          Name="DocumentsButton" />
 
-                        <joel:MenuButton Icon="{StaticResource Geometry_Icon_Settings}"
+                        <aleethey:MenuButton Icon="{StaticResource Geometry_Icon_Settings}"
                                          IconFill="{DynamicResource Brush_Primary_Blue}"
-                                         ContentStringFormat="{DynamicResource Text_Settings}"
+                                         ContentStringFormat="{DynamicResource LangRes_MenuComponent_SettingsBtn}"
                                          Command="{Binding MenuButtonClick}"
                                          CommandParameter="Settings" 
                                          IsMinState="{DynamicResource IsMinStateForMenu}"
                                          Name="SettingsButton" />
 
-                        <joel:MenuButton Icon="{StaticResource Geometry_Icon_About}"
+                        <aleethey:MenuButton Icon="{StaticResource Geometry_Icon_About}"
                                          IconFill="{DynamicResource Brush_Primary_Purple}"
-                                         ContentStringFormat="{DynamicResource Text_About}"
+                                         ContentStringFormat="{DynamicResource LangRes_MenuComponent_AboutBtn}"
                                          Command="{Binding MenuButtonClick}"
                                          CommandParameter="About" 
                                          IsMinState="{DynamicResource IsMinStateForMenu}"

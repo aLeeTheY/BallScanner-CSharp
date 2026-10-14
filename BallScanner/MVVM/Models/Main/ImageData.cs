@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.Base;
+using BallScanner.MVVM.Base;
 
 namespace BallScanner.MVVM.Models.Main
 {
@@ -64,11 +64,11 @@ namespace BallScanner.MVVM.Models.Main
                 switch (BallGrade)
                 {
                     case BallGrade.FIRST:
-                        return "Первый";
+                        return App.L("LangRes_Grade_First");
                     case BallGrade.SECOND:
-                        return "Второй";
+                        return App.L("LangRes_Grade_Second");
                     case BallGrade.DEFECTIVE:
-                        return "Не соот.";
+                        return App.L("LangRes_Grade_NotMatching");
                     case BallGrade.INDEFINED:
                         return "-";
                 }

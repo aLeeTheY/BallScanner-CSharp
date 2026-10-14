@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:joel="clr-namespace:Joel.Controls;assembly=Joel.Controls"
+             xmlns:aleethey="clr-namespace:aLeeTheY.Controls;assembly=aLeeTheY.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="400" 
              d:DesignWidth="550">
@@ -34,48 +34,28 @@
                 <Viewbox Child="{StaticResource Vector_Logo}"
                          Width="225" />
                 
-                <joel:BlockHeader Text="Авторизация"
+                <aleethey:BlockHeader Text="{DynamicResource LangRes_LoginWindow_AuthBlockLabel}"
                                   Margin="0,16,0,0"
                                   TextAlignment="Center"
                                   DockPanel.Dock="Top" />
 
-                <joel:LabelTextBox Height="29"
+                <aleethey:LabelTextBox Height="29"
                                    Name="Login"
                                    Margin="0,7,0,0"
-                                   LabelText="Логин"
+                                   LabelText="{DynamicResource LangRes_LoginWindow_LoginLabel}"
                                    Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    Style="{StaticResource Style_Inside}" />
 
-                <joel:LabelPasswordBox Height="29"
+                <aleethey:LabelPasswordBox Height="29"
                                        Margin="0,7,0,0"
-                                       LabelText="Пароль"
+                                       LabelText="{DynamicResource LangRes_LoginWindow_PasswordLabel}"
                                        HiddenText="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        Style="{StaticResource PasswordBox_Style}" />
 
                 <Button Height="29"
                         Margin="0,7,0,0"
-                        Content="Вход"
+                        Content="{DynamicResource LangRes_LoginWindow_LoginBtn}"
                         Command="{Binding AuthUser_Command}" />
-                
-                <!--<Grid Margin="0,7,0,0"
-                      Height="29">
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="7" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Button Content="Регистрация"
-                            Command="{Binding GoToRegistrationView_Command}"
-                            Height="29" />
-
-                    <Button Grid.Column="2"
-                            Content="Вход"
-                            Command="{Binding AuthUser_Command}"
-                            Height="29" />
-
-                </Grid>-->
 
             </StackPanel>
         </DockPanel>

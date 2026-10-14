@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.Base;
+using BallScanner.MVVM.Base;
 using System;
 using System.Windows;
 
@@ -8,27 +8,27 @@ namespace BallScanner.MVVM.ViewModels.Main
     {
         public string Login
         {
-            get => App.CurrentUser._username;
+            get => App.CurrentUser?._username ?? "-";
         }
 
         public string Surname
         {
-            get => App.CurrentUser._surname;
+            get => App.CurrentUser?._surname ?? "-";
         }
 
         public string Name
         {
-            get => App.CurrentUser._name;
+            get => App.CurrentUser?._name ?? "-";
         }
 
         public string Lastname
         {
-            get => App.CurrentUser._lastname;
+            get => App.CurrentUser?._lastname ?? "-";
         }
 
         public int Smena_Number
         {
-            get => App.CurrentUser._smena_number;
+            get => App.CurrentUser?._smena_number ?? 0;
         }
 
         public string Access_Level
@@ -37,15 +37,16 @@ namespace BallScanner.MVVM.ViewModels.Main
             {
                 // superuser
                 if (App.CurrentUser == null)
-                    return "Суперпользователь";
+                    return App.L("LangRes_AccessLevel_NotAuthorized");
 
                 switch (App.CurrentUser._access_level)
                 {
-                    case 0: return "Пользователь";  // user
-                    case 1: return "Администратор"; // admin
+                    case 0: return App.L("LangRes_AccessLevel_User");  // user
+                    case 1: return App.L("LangRes_AccessLevel_Admin"); // admin
+                                                                       //case 2: return "Суперпользователь";  // superuser
                 }
 
-                return "Не определён";
+                return App.L("LangRes_AccessLevel_Unknown");
             }
         }
 

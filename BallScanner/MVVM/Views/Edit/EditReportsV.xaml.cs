@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using System.Windows;
 
 namespace BallScanner.MVVM.Views.Edit
@@ -13,7 +13,8 @@ namespace BallScanner.MVVM.Views.Edit
             {
                 DeleteButton.Visibility = Visibility.Visible;
                 DeleteButton.IsEnabled = true;
-            } else
+            }
+            else
             {
                 DeleteButton.Visibility = Visibility.Collapsed;
                 DeleteButton.IsEnabled = false;

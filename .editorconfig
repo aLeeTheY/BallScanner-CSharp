@@ -1,0 +1,61 @@
+# For more information about the properties used in
+# this file, please see the EditorConfig documentation:
+# http://editorconfig.org/
+
+root = true
+
+# ! --- 1. Default | Settings for all files
+# ! ----------------------------------------
+[*]
+end_of_line = crlf
+charset = utf-8
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# ! --- 2. Markdown
+# ! ---------------
+[*.md]
+indent_size = 4
+trim_trailing_whitespace = false
+
+# ! --- 3. XML & SVG & XAML
+# ! -----------------------
+[*.{xml,svg,xaml}]
+indent_size = 4
+
+# ! --- 4. JSON (WEBMANIFEST) & YAML
+# ! --------------------------------
+[*.{json,webmanifest,yml,yaml}]
+indent_size = 4
+
+# ! --- 5. C# source files
+# ! ----------------------
+[*.cs]
+indent_size = 4
+indent_style = space
+csharp_new_line_before_open_brace = all
+dotnet_style_allow_multiple_blank_lines_experimental = false
+dotnet_diagnostic.IDE2000.severity = warning
+
+# ! --- 6. Project & Solution files
+# ! -------------------------------
+[*.{csproj,vbproj,fsproj,props,targets,sln,config,manifest,resx,settings,xsd}]
+indent_size = 2
+
+# ! --- 7. Batch & PowerShell
+# ! -------------------------
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
+
+# ! --- 8. Unix scripts
+# ! -------------------
+[*.sh]
+end_of_line = lf
+indent_size = 2
+
+# ! --- 9. LICENSE & plain text
+# ! -----------------------------
+[LICENSE]
+insert_final_newline = false

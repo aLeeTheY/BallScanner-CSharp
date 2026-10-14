@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.Commands;
+using BallScanner.MVVM.Commands;
 using BallScanner.MVVM.Base;
 using System.Windows;
 using System;
@@ -88,11 +88,13 @@ namespace BallScanner.MVVM.ViewModels.Main
 
                 SelectedPage = accountManagmentVM;
                 App.WriteMsg2Log("Нажатие на пункт меню \"Администрирование\"", LoggerTypes.INFO);
-            } else if (name == "Account")
+            }
+            else if (name == "Account")
             {
                 SelectedPage = accountVM;
                 App.WriteMsg2Log("Нажатие на пункт меню \"Аккаунт\"", LoggerTypes.INFO);
-            } else if (name == "Scan")
+            }
+            else if (name == "Scan")
             {
                 SelectedPage = scanVM;
                 App.WriteMsg2Log("Нажатие на пункт меню \"Сканирование\"", LoggerTypes.INFO);
@@ -101,18 +103,21 @@ namespace BallScanner.MVVM.ViewModels.Main
             {
                 SelectedPage = calibrateVM;
                 App.WriteMsg2Log("Нажатие на пункт меню \"Калибровка\"", LoggerTypes.INFO);
-            } else if (name == "Documents")
+            }
+            else if (name == "Documents")
             {
                 if (DocumentsVM.RefreshDataGrid.CanExecute(null))
                     DocumentsVM.RefreshDataGrid.Execute(null);
 
                 SelectedPage = documentsVM;
                 App.WriteMsg2Log("Нажатие на пункт меню \"Отчёты\"", LoggerTypes.INFO);
-            } else if (name == "Settings")
+            }
+            else if (name == "Settings")
             {
                 SelectedPage = settingsVM;
                 App.WriteMsg2Log("Нажатие на пункт меню \"Настройки\"", LoggerTypes.INFO);
-            } else if (name == "About")
+            }
+            else if (name == "About")
             {
                 SelectedPage = aboutVM;
                 App.WriteMsg2Log("Нажатие на пункт меню \"О программе\"", LoggerTypes.INFO);
@@ -130,8 +135,8 @@ namespace BallScanner.MVVM.ViewModels.Main
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.ERROR);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                App.WriteMsg2Log("Ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.ERROR);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
 
             App.CurrentUser = null;

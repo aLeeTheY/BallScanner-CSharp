@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:joel="clr-namespace:Joel.Controls;assembly=Joel.Controls"
+             xmlns:aleethey="clr-namespace:aLeeTheY.Controls;assembly=aLeeTheY.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="400" 
              d:DesignWidth="550">
@@ -15,7 +15,7 @@
             <StackPanel Orientation="Vertical"
                         DockPanel.Dock="Top">
 
-                <joel:BlockHeader Text="Добавление новых пользователей"
+                <aleethey:BlockHeader Text="{DynamicResource LangRes_RegistrationWindow_BlockLabel}"
                                   TextAlignment="Center"
                                   DockPanel.Dock="Top" />
 
@@ -31,16 +31,16 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <joel:LabelTextBox Grid.Column="0"
-                                       LabelText="* Фамилия"
+                    <aleethey:LabelTextBox Grid.Column="0"
+                                       LabelText="{DynamicResource LangRes_RegistrationWindow_RequiredSurnameLabel}"
                                        Text="{Binding Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <joel:LabelTextBox Grid.Column="2"
-                                       LabelText="* Имя"
+                    <aleethey:LabelTextBox Grid.Column="2"
+                                       LabelText="{DynamicResource LangRes_RegistrationWindow_RequiredNameLabel}"
                                        Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <joel:LabelTextBox Grid.Column="4"
-                                       LabelText="Отчество"
+                    <aleethey:LabelTextBox Grid.Column="4"
+                                       LabelText="{DynamicResource LangRes_RegistrationWindow_LastnameLabel}"
                                        Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 </Grid>
@@ -55,12 +55,12 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <joel:LabelTextBox Grid.Column="0"
-                                       LabelText="* Логин"
+                    <aleethey:LabelTextBox Grid.Column="0"
+                                       LabelText="{DynamicResource LangRes_RegistrationWindow_RequiredLoginLabel}"
                                        Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <joel:LabelTextBox Grid.Column="2"
-                                       LabelText="* Номер смены"
+                    <aleethey:LabelTextBox Grid.Column="2"
+                                       LabelText="{DynamicResource LangRes_RegistrationWindow_RequiredSmenaNumberLabel}"
                                        Text="{Binding Smena_Number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 </Grid>
@@ -74,12 +74,12 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <joel:LabelTextBox Grid.Column="0"
-                                       LabelText="* Пароль"
+                    <aleethey:LabelTextBox Grid.Column="0"
+                                       LabelText="{DynamicResource LangRes_RegistrationWindow_RequiredPasswordLabel}"
                                        Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <joel:LabelTextBox Grid.Column="2"
-                                       LabelText="* Повторите пароль"
+                    <aleethey:LabelTextBox Grid.Column="2"
+                                       LabelText="{DynamicResource LangRes_RegistrationWindow_RequiredPasswordRepeatLabel}"
                                        Text="{Binding Password_Check, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 </Grid>
@@ -88,17 +88,21 @@
             <Button DockPanel.Dock="Bottom"
                     Height="29"
                     Margin="0,10,0,0"
-                    Content="Добавить"
+                    Content="{DynamicResource LangRes_RegistrationWindow_AddBtn}"
                     Command="{Binding AddUser_Command}" />
 
-            <TextBlock DockPanel.Dock="Bottom"
-                       FontSize="14"
-                       Foreground="{StaticResource Brush_OnBackground_OnSurface_Medium}"
-                       TextWrapping="WrapWithOverflow"
-                       TextAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Text="Поля, помеченные звёздочкой, являются обязательными к заполнению! Пароль должен содержать не менее 4-х символов!"
-                       Name="Version_Field" />
+            <StackPanel DockPanel.Dock="Bottom"
+                        HorizontalAlignment="Center"
+                        Orientation="Vertical">
+                <TextBlock FontSize="14"
+                           Foreground="{StaticResource Brush_OnBackground_OnSurface_Medium}"
+                           Text="{DynamicResource LangRes_RegistrationWindow_HintText__Part_1}"
+                           TextAlignment="Center" />
+                <TextBlock FontSize="14"
+                           Foreground="{StaticResource Brush_OnBackground_OnSurface_Medium}"
+                           Text="{DynamicResource LangRes_RegistrationWindow_HintText__Part_2}"
+                           TextAlignment="Center" />
+            </StackPanel>                    
 
         </DockPanel>
     </Border>

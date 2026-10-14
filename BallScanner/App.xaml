@@ -25,10 +25,7 @@
                 </ResourceDictionary>
 
                 <!-- Language -->
-                <ResourceDictionary Source="Resources/Languages/Language.ru-RU.xaml" />
-
-                <!-- Generic -->
-                <ResourceDictionary Source="Resources/Languages/Generic.xaml" />
+                <ResourceDictionary Source="Resources/Languages/Language.en-US.xaml" />
 
                 <!-- Application vector icons -->
                 <ResourceDictionary Source="Resources/Icons/Icons.xaml"/>
@@ -41,7 +38,7 @@
                 <ResourceDictionary Source="Resources/Fonts/Fonts.xaml" />
 
                 <!-- Control styles -->
-                <ResourceDictionary Source="pack://application:,,,/Joel.Controls;component/Styles/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/aLeeTheY.Controls;component/Styles/Styles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/DataGrid_Style.xaml" />
 
 

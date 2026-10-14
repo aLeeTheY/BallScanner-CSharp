@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.Base;
+using BallScanner.MVVM.Base;
 using System;
 using System.Windows;
 
