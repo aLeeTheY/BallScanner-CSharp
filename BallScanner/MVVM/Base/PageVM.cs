@@ -1,4 +1,4 @@
-﻿namespace BallScanner.MVVM.Base
+namespace BallScanner.MVVM.Base
 {
     public abstract class PageVM : BaseViewModel
     {

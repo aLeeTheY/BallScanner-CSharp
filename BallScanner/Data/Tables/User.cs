@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -151,9 +151,9 @@ namespace BallScanner.Data.Tables
                 switch (_is_active)
                 {
                     case 0:
-                        return "Неактивен";
+                        return App.L("LangRes_Status_Inactive");
                     case 1:
-                        return "Активен";
+                        return App.L("LangRes_Status_Active");
                 }
                 return null;
             }
@@ -191,9 +191,9 @@ namespace BallScanner.Data.Tables
                 switch (_access_level)
                 {
                     case 0:
-                        return "Пользователь";
+                        return App.L("LangRes_AccessLevel_User");
                     case 1:
-                        return "Администратор";
+                        return App.L("LangRes_AccessLevel_Admin");
                 }
                 return null;
             }
@@ -252,7 +252,7 @@ namespace BallScanner.Data.Tables
         // Все отчёты пользователя
         public IList<Report> Reports { get; set; }
 
-        public User() 
+        public User()
         {
             timer.Elapsed += new ElapsedEventHandler(OnSaveDbContext);
         }
@@ -288,8 +288,8 @@ namespace BallScanner.Data.Tables
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
         }
     }

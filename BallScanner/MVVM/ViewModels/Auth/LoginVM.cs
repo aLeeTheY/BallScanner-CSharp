@@ -1,7 +1,7 @@
-﻿using BallScanner.MVVM.Base;
+using BallScanner.MVVM.Base;
 using BallScanner.MVVM.Commands;
 using System.Windows;
-using Joel.Utils.Services;
+using aLeeTheY.Utils.Services;
 using System.Linq;
 using BallScanner.Data;
 using BallScanner.Data.Tables;
@@ -58,26 +58,65 @@ namespace BallScanner.MVVM.ViewModels.Auth
             if ((Login == null || Login.Length == 0 || Login.Equals("")) || (Password == null || Password.Length == 0 || Password.Equals("")))
             {
                 Log.Warn("Предупреждение пользователя! Не были указаны данные (логин или пароль) для авторизации!");
-                MessageBox.Show("Укажите данные для входа!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                MessageBox.Show(App.L("LangRes_Msg_EnterCredentials"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                 return;
             }
 
             // superuser rights
-            if (SHAService.ComputeSha256Hash(Login) == "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2" && SHAService.ComputeSha256Hash(Password) == "e2a5cb13dd352aabe3568985c8af2498f1edf4045ce434f36fac21101092439e")
+            if (Login == "admin" && SHAService.ComputeSha256Hash(Password) == "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918")
             {
-                // open work window
-                Window old = Application.Current.MainWindow;
-                Window future = new Views.Main.RootV();
+                try
+                {
+                    AppDbContext dbContext = AppDbContext.GetInstance();
 
-                Application.Current.MainWindow = future;
+                    // Ищем суперюзера в БД
+                    User superuser = dbContext.Users
+                        .FirstOrDefault(u => u._username == "admin");
 
-                // Clear fields
-                Login = Password = null;
+                    // Если нет — создаём
+                    if (superuser == null)
+                    {
+                        superuser = new User(
+                            surname: "Silverhand",
+                            name: "Johnny",
+                            lastname: "-",
+                            smena_number: 0,
+                            username: "admin",
+                            password_hash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
+                        );
 
-                future.Show();
-                old.Close();
+                        // User-конструктор ставит _access_level = 0, а нам нужен админ
+                        superuser._access_level = 1;
 
-                return;
+                        dbContext.Users.Add(superuser);
+                        dbContext.SaveChanges();
+
+                        Log.Info("Создан суперпользователь admin в БД");
+                    }
+
+                    // ВАЖНО: ставим текущего юзера, чтобы _user_id для Reports был валидным
+                    App.CurrentUser = superuser;
+
+                    // open work window
+                    Window old = Application.Current.MainWindow;
+                    Window future = new Views.Main.RootV();
+                    Application.Current.MainWindow = future;
+
+                    // Clear fields
+                    Login = Password = null;
+
+                    future.Show();
+                    old.Close();
+
+                    return;
+
+                }
+                catch (Exception ex)
+                {
+                    Log.Fatal("Ошибка при создании/поиске суперюзера: " + App.GetFullExceptionMessage(ex));
+                    MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
+                }
             }
             else
             {
@@ -96,7 +135,7 @@ namespace BallScanner.MVVM.ViewModels.Auth
                     if (user == null)
                     {
                         Log.Error("Ошибка авторизации! Неправильный логин или пароль!");
-                        MessageBox.Show("Неправильный логин или пароль!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                        MessageBox.Show(App.L("LangRes_Msg_InvalidCredentials"), App.L("LangRes_Msg_TitleError"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                         return;
                     }
 
@@ -117,8 +156,8 @@ namespace BallScanner.MVVM.ViewModels.Auth
                 }
                 catch (Exception ex)
                 {
-                    Log.Fatal("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message);
-                    MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    Log.Fatal("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex));
+                    MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 }
             }
         }

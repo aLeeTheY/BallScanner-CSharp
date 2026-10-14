@@ -1,4 +1,4 @@
-﻿using BallScanner.Data.Tables;
+using BallScanner.Data.Tables;
 using BallScanner.MVVM.Base;
 using BallScanner.MVVM.Commands;
 using System.Windows;
@@ -46,7 +46,7 @@ namespace BallScanner.MVVM.ViewModels.Edit
             else if (param is User)
             {
                 editUsersVM = new EditUsersVM(param as User, currDialogWindow);
-                editUsersVM.ParentViewModel= this;
+                editUsersVM.ParentViewModel = this;
                 SelectedViewModel = editUsersVM;
             }
 

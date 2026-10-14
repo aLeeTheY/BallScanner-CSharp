@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Language" Type="System.Globalization.CultureInfo" Scope="User">
-      <Value Profile="(Default)">ru-RU</Value>
+      <Value Profile="(Default)">en-US</Value>
     </Setting>
     <Setting Name="IsDarkTheme" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

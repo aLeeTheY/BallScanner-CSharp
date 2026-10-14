@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/aLeeTheY.Controls;component/Themes/BlockHeader_Style.xaml" />
+        <ResourceDictionary Source="/aLeeTheY.Controls;component/Themes/JustButton_Style.xaml" />
+        <ResourceDictionary Source="/aLeeTheY.Controls;component/Themes/LabelComboBox_Style.xaml" />
+        <ResourceDictionary Source="/aLeeTheY.Controls;component/Themes/LabelTextBox_Style.xaml" />
+        <ResourceDictionary Source="/aLeeTheY.Controls;component/Themes/SimpleRadioButton_Style.xaml" />
+        <ResourceDictionary Source="/aLeeTheY.Controls;component/Themes/MenuButton_Style.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

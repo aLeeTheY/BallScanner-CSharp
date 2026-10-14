@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:joel="clr-namespace:Joel.Controls;assembly=Joel.Controls"
+             xmlns:aleethey="clr-namespace:aLeeTheY.Controls;assembly=aLeeTheY.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -19,7 +19,7 @@
             <StackPanel DockPanel.Dock="Top"
                         Orientation="Vertical">
 
-                <joel:BlockHeader Text="Поиск по критериям" />
+                <aleethey:BlockHeader Text="{DynamicResource LangRes_AccountManagementPage_SearchBlockLabel}" />
 
                 <Grid Margin="0,7,0,0"
                       Height="29">
@@ -39,23 +39,23 @@
                                           MinWidth="150"-->
 
                     <ComboBox SelectedIndex="{Binding Selected_Index, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <ComboBoxItem Content="Логин" />
-                        <ComboBoxItem Content="Фамилия" />
-                        <ComboBoxItem Content="Имя" />
-                        <ComboBoxItem Content="Отчество" />
-                        <ComboBoxItem Content="Номер смены" />
-                        <ComboBoxItem Content="Уровень доступа" />
-                        <ComboBoxItem Content="Статус аккаунта" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_AccountManagementPage_SearchCriteria_Login}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_AccountManagementPage_SearchCriteria_Surname}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_AccountManagementPage_SearchCriteria_Name}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_AccountManagementPage_SearchCriteria_Lastname}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_AccountManagementPage_SearchCriteria_SmenaNumber}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_AccountManagementPage_SearchCriteria_AccessLevel}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_AccountManagementPage_SearchCriteria_AccountStatus}" />
                     </ComboBox>
 
-                    <joel:LabelTextBox Grid.Column="2"
-                                       LabelText="Значение критерия"
+                    <aleethey:LabelTextBox Grid.Column="2"
+                                       LabelText="{DynamicResource LangRes_AccountManagementPage_SearchValueLabel}"
                                        
                                        Text="{Binding Search_Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        Style="{StaticResource Style_Inside}" />
 
                     <Button Grid.Column="4"
-                            Content="Добавить аккаунт"
+                            Content="{DynamicResource LangRes_AccountManagementPage_AddAccountBtn}"
                             Command="{Binding AddUser_Command}"
                             Height="29" />
 
@@ -65,8 +65,8 @@
             <DockPanel Margin="0,10,0,0"
                        LastChildFill="True">
 
-                <joel:BlockHeader DockPanel.Dock="Top"
-                                  Text="Список пользователей" />
+                <aleethey:BlockHeader DockPanel.Dock="Top"
+                                  Text="{DynamicResource LangRes_AccountManagementPage_UserListBlockLabel}" />
 
                 <!-- Table -->
                 <DataGrid Margin="0,7,0,0"
@@ -81,36 +81,36 @@
                     </DataGrid.InputBindings>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="№ п/п" 
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_Number}" 
                                             CellStyle="{StaticResource FirstColumnCell}"
                                             Binding="{Binding _id, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True"
                                             Width="0.5*" />
-                        <DataGridTextColumn Header="Логин"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_Login}"
                                             Width="*" 
                                             Binding="{Binding _username, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Фамилия"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_Surname}"
                                             Width="*"
                                             Binding="{Binding _surname, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Имя"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_Name}"
                                             Width="*" 
                                             Binding="{Binding _name, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Отчество"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_Lastname}"
                                             Width="*" 
                                             Binding="{Binding _lastname, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Номер смены"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_SmenaNumber}"
                                             Width="*" 
                                             Binding="{Binding _smena_number, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Уровень доступа"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_AccessLevel}"
                                             Width="*"
                                             Binding="{Binding Access_Level, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Статус аккаунта"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_AccountManagementPage_Column_AccountStatus}"
                                             Width="*"
                                             Binding="{Binding Is_Active, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />

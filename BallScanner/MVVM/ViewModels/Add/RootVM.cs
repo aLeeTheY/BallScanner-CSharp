@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.Base;
+using BallScanner.MVVM.Base;
 
 namespace BallScanner.MVVM.ViewModels.Add
 {

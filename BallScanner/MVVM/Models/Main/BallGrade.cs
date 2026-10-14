@@ -1,4 +1,4 @@
-﻿namespace BallScanner.MVVM.Models.Main
+namespace BallScanner.MVVM.Models.Main
 {
     public enum BallGrade
     {

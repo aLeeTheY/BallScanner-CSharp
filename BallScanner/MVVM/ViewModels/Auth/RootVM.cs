@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.Base;
+using BallScanner.MVVM.Base;
 using BallScanner.MVVM.Commands;
 
 namespace BallScanner.MVVM.ViewModels.Auth

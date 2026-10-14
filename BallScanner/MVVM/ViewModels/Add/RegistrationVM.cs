@@ -1,9 +1,9 @@
-﻿using BallScanner.Data;
+using aLeeTheY.Utils.Services;
+using BallScanner.Data;
 using BallScanner.Data.Tables;
 using BallScanner.MVVM.Base;
 using BallScanner.MVVM.Commands;
 using BallScanner.MVVM.ViewModels.Main;
-using Joel.Utils.Services;
 using System;
 using System.Linq;
 using System.Windows;
@@ -119,7 +119,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (Surname == null || Surname.Equals("") || Surname.Length == 0)
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Поле \"Фамилия\" пустое!", LoggerTypes.WARN);
-                    MessageBox.Show("Вы не указали фамилию пользователя!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_NoSurname"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -127,7 +127,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (Name == null || Name.Equals("") || Name.Length == 0)
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Поле \"Имя\" пустое!", LoggerTypes.WARN);
-                    MessageBox.Show("Вы не указали имя пользователя!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_NoName"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -135,7 +135,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (Login == null || Login.Equals("") || Login.Length == 0)
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Поле \"Логин\" пустое!", LoggerTypes.WARN);
-                    MessageBox.Show("Вы не указали логин аккаунта пользователя!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_NoLogin"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -143,7 +143,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (Smena_Number == null || Smena_Number.Equals("") || Smena_Number.Length == 0)
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Поле \"Номер смены\" пустое!", LoggerTypes.WARN);
-                    MessageBox.Show("Вы не указали номер смены пользователя!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_NoSmenaNumber"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -151,7 +151,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (Password == null || Password.Equals(""))
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Поле \"Пароль\" пустое!", LoggerTypes.WARN);
-                    MessageBox.Show("Вы не указали пароль для авторизации!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_NoPassword"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -159,7 +159,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (Password_Check == null || Password_Check.Equals(""))
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Поле \"Повторите пароль\" пустое!", LoggerTypes.WARN);
-                    MessageBox.Show("Вы не указали повтор пароля для проверки!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_NoPasswordRepeat"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -167,7 +167,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (Password.Length < 4 || Password_Check.Length < 4)
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Длина пароля или повтора пароля меньше 4-х символов!", LoggerTypes.WARN);
-                    MessageBox.Show("Длина пароля меньше 4-х символов!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_PasswordTooShort"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -175,7 +175,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (!Password.Equals(Password_Check))
                 {
                     App.WriteMsg2Log("Предупреждение пользователя! Пароли не совпадают!", LoggerTypes.WARN);
-                    MessageBox.Show("Пароли не совпадают!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_PasswordsMismatch"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     return;
                 }
 
@@ -186,12 +186,12 @@ namespace BallScanner.MVVM.ViewModels.Add
                     if (Smena_Number.Length > int.MaxValue.ToString().Length)
                     {
                         App.WriteMsg2Log("Предупреждение пользователя! Превышено максимально допустимое значение (" + int.MaxValue + ") для ввода номера смены!", LoggerTypes.WARN);
-                        MessageBox.Show("Максимальный размер числа для номера смены равен " + int.MaxValue + ".", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                        MessageBox.Show(App.L("LangRes_Msg_SmenaMaxValue") + int.MaxValue + ".", App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     }
                     else
                     {
                         App.WriteMsg2Log("Предупреждение пользователя! Номер смены должен состоять только из цифр!", LoggerTypes.WARN);
-                        MessageBox.Show("Номер смены должен состоять только из цифр!", "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                        MessageBox.Show(App.L("LangRes_Msg_SmenaDigitsOnly"), App.L("LangRes_Msg_TitleWarning"), MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                     }
 
                     return;
@@ -208,7 +208,7 @@ namespace BallScanner.MVVM.ViewModels.Add
                 if (user != null)
                 {
                     App.WriteMsg2Log("Попытка зарегистрировать пользователя с логином, который уже имеется в базе данных!", LoggerTypes.ERROR);
-                    MessageBox.Show("Пользователь с таким логином уже зарегистрирован!\nПожалуйста, выберите другой логин!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    MessageBox.Show(App.L("LangRes_Msg_LoginAlreadyExists"), App.L("LangRes_Msg_TitleError"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                     return;
                 }
 
@@ -226,8 +226,8 @@ namespace BallScanner.MVVM.ViewModels.Add
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
         }
     }

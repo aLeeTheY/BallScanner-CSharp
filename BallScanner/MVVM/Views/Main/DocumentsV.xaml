@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:joel="clr-namespace:Joel.Controls;assembly=Joel.Controls"
+             xmlns:aleethey="clr-namespace:aLeeTheY.Controls;assembly=aLeeTheY.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" 
              d:DesignWidth="800"
@@ -19,7 +19,7 @@
             <StackPanel DockPanel.Dock="Top"
                         Orientation="Vertical">
 
-                <joel:BlockHeader Text="Поиск по критериям" />
+                <aleethey:BlockHeader Text="{DynamicResource LangRes_DocumentsPage_SearchBlockLabel}" />
 
                 <Grid Margin="0,7,0,0"
                       Height="29">
@@ -35,24 +35,19 @@
                                           MinWidth="150"-->
 
                     <ComboBox SelectedIndex="{Binding Selected_Index, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <ComboBoxItem Content="Дата" />
-                        <ComboBoxItem Content="Фракция" />
-                        <ComboBoxItem Content="Номер партии" />
-                        <ComboBoxItem Content="Номер смены" />
-                        <ComboBoxItem Content="Значение" />
-                        <ComboBoxItem Content="Примечание" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_DocumentsPage_SearchCriteria_Date}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_DocumentsPage_SearchCriteria_Fraction}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_DocumentsPage_SearchCriteria_PartiaNumber}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_DocumentsPage_SearchCriteria_SmenaNumber}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_DocumentsPage_SearchCriteria_Value}" />
+                        <ComboBoxItem Content="{DynamicResource LangRes_DocumentsPage_SearchCriteria_Note}" />
                     </ComboBox>
 
-                    <joel:LabelTextBox Grid.Column="2"
-                                       LabelText="Значение критерия"
+                    <aleethey:LabelTextBox Grid.Column="2"
+                                       LabelText="{DynamicResource LangRes_DocumentsPage_SearchValueLabel}"
                                        
                                        Text="{Binding Search_Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        Style="{StaticResource Style_Inside}" />
-
-                    <!--<Button Grid.Column="4"
-                            Name="MySearchButton"
-                            Command="{Binding UpdateCommand}"
-                            Content="Сохранить" />-->
 
                 </Grid>
             </StackPanel>
@@ -60,8 +55,8 @@
             <DockPanel Margin="0,10,0,0"
                        LastChildFill="True">
 
-                <joel:BlockHeader DockPanel.Dock="Top"
-                                  Text="История сканирований" />
+                <aleethey:BlockHeader DockPanel.Dock="Top"
+                                  Text="{DynamicResource LangRes_DocumentsPage_HistoryBlockLabel}" />
 
                 <!-- Table -->
                 <DataGrid Margin="0,7,0,0"
@@ -76,32 +71,32 @@
                     </DataGrid.InputBindings>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="№ п/п" 
+                        <DataGridTextColumn Header="{DynamicResource LangRes_DocumentsPage_Column_Number}" 
                                             CellStyle="{StaticResource FirstColumnCell}"
                                             Binding="{Binding _id, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True"
                                             Width="0.5*" />
-                        <DataGridTextColumn Header="Дата"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_DocumentsPage_Column_Date}"
                                             Width="*" 
                                             Binding="{Binding _date, StringFormat=dd.MM.yyyy, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Фракция"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_DocumentsPage_Column_Fraction}"
                                             Width="*"
                                             Binding="{Binding _fraction, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Номер партии"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_DocumentsPage_Column_PartiaNumber}"
                                             Width="*" 
                                             Binding="{Binding _partia_number, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Номер смены"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_DocumentsPage_Column_SmenaNumber}"
                                             Width="*" 
                                             Binding="{Binding User._smena_number, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Значение"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_DocumentsPage_Column_Value}"
                                             Width="*" 
                                             Binding="{Binding _avg_black_pixels_value, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />
-                        <DataGridTextColumn Header="Примечание"
+                        <DataGridTextColumn Header="{DynamicResource LangRes_DocumentsPage_Column_Note}"
                                             Width="*"
                                             Binding="{Binding _note, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                                             IsReadOnly="True" />

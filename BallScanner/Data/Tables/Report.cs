@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Windows;
@@ -13,7 +13,7 @@ namespace BallScanner.Data.Tables
         public event PropertyChangedEventHandler PropertyChanged;
         private Timer timer = new Timer(5000) { Enabled = false };
 
-        private bool[] isInit = new bool[5] {true, true, true, true, true};
+        private bool[] isInit = new bool[5] { true, true, true, true, true };
 
         [Key]
         public int _id { get; set; }
@@ -21,7 +21,7 @@ namespace BallScanner.Data.Tables
         private DateTime _my_date;
         public DateTime _date
         {
-            get => _my_date; 
+            get => _my_date;
             set
             {
                 if (_my_date == value) return;
@@ -69,9 +69,9 @@ namespace BallScanner.Data.Tables
         }
 
         private string _my_partia_number;
-        public string _partia_number 
-        { 
-            get => _my_partia_number; 
+        public string _partia_number
+        {
+            get => _my_partia_number;
             set
             {
                 if (_my_partia_number == value) return;
@@ -135,7 +135,8 @@ namespace BallScanner.Data.Tables
                     // save info when 5 sec no activity
                     timer.Stop();
                     timer.Start();
-                } else
+                }
+                else
                 {
                     isInit[4] = false;
                 }
@@ -147,42 +148,7 @@ namespace BallScanner.Data.Tables
         public int _user_id { get; set; }
         public virtual User User { get; set; }
 
-        //public string Date
-        //{
-        //    get => DateTime.MinValue.AddMilliseconds(_date).ToString("dd.MM.yyyy");
-        //    //set
-        //    //{
-        //    //    DateTime searchDateTime;
-        //    //    if (DateTime.TryParseExact(value, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out searchDateTime))
-        //    //    {
-        //    //        double date = searchDateTime.Date.Subtract(DateTime.MinValue).TotalMilliseconds;
-
-        //    //        if (_date == date) return;
-        //    //        _date = date;
-
-        //    //        if (PropertyChanged != null)
-        //    //            PropertyChanged(this, new PropertyChangedEventArgs(nameof(Date)));
-        //    //    } else
-        //    //    {
-        //    //        MessageBox.Show("Неправильный формат даты! Пожалуйста, введите дату в формате \"dd.MM.yyyy\"!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-        //    //    }
-        //    //}
-        //}
-
-        //public string Note
-        //{
-        //    get => _note;
-        //    set
-        //    {
-        //        if (_note == value) return;
-
-        //        _note = value;
-        //        if (PropertyChanged != null)
-        //            PropertyChanged(this, new PropertyChangedEventArgs(nameof(Note)));
-        //    }
-        //}
-
-        public Report() 
+        public Report()
         {
             timer.Elapsed += new ElapsedEventHandler(OnSaveDbContext);
         }
@@ -214,8 +180,8 @@ namespace BallScanner.Data.Tables
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
         }
     }

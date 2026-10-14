@@ -1,4 +1,4 @@
-﻿namespace BallScanner.Resources.Styles
+namespace BallScanner.Resources.Styles
 {
     partial class DataGrid_Style
     {

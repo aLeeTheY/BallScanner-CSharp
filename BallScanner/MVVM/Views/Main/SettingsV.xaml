@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BallScanner.MVVM.ViewModels.Main"
-             xmlns:joel="clr-namespace:Joel.Controls;assembly=Joel.Controls"
+             xmlns:aleethey="clr-namespace:aLeeTheY.Controls;assembly=aLeeTheY.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -24,23 +24,23 @@
                        Margin="0,0,5,0"
                        LastChildFill="True">
 
-                <joel:BlockHeader DockPanel.Dock="Top"
-                                  Text="{DynamicResource Text_Language}" />
+                <aleethey:BlockHeader DockPanel.Dock="Top"
+                                  Text="{DynamicResource LangRes_SettingsPage_LanguageBlockLabel}" />
 
                 <StackPanel Orientation="Vertical">
 
-                    <joel:SimpleRadioButton Name="Button_LanguageRussian"
-                                            Content="{StaticResource Text_Language_Russian_Region}"
-                                            ContentStringFormat="{DynamicResource Text_Language_Russian}"
+                    <aleethey:SimpleRadioButton Name="Button_LanguageRussian"
+                                            Content="{StaticResource LangRes_SettingsPage_Language_Russian_AlwaysOnRussian}"
+                                            ContentStringFormat="{DynamicResource LangRes_SettingsPage_Language_Russian}"
                                             Image="{StaticResource Vector_Image_FlagRussia}"
                                             ImageWidth="34"
                                             ImageHeight="21"
                                             Margin="0,7,0,0" 
                                             Click="Button_LanguageRussian_Click" />
 
-                    <joel:SimpleRadioButton Name="Button_LanguageEnglish"
-                                            Content="{StaticResource Text_Language_English_Region}"
-                                            ContentStringFormat="{DynamicResource Text_Language_English}"
+                    <aleethey:SimpleRadioButton Name="Button_LanguageEnglish"
+                                            Content="{StaticResource LangRes_SettingsPage_Language_English_AlwaysOnEnglish}"
+                                            ContentStringFormat="{DynamicResource LangRes_SettingsPage_Language_English}"
                                             Image="{StaticResource Vector_Image_FlagAmerica}"
                                             ImageWidth="34"
                                             ImageHeight="21"
@@ -56,13 +56,13 @@
                        Margin="5,0,0,0"
                        LastChildFill="True">
 
-                <joel:BlockHeader DockPanel.Dock="Top"
-                                  Text="{DynamicResource Text_Theme}" />
+                <aleethey:BlockHeader DockPanel.Dock="Top"
+                                  Text="{DynamicResource LangRes_SettingsPage_ThemeBlockLabel}" />
 
                 <StackPanel Orientation="Vertical">
 
-                    <joel:SimpleRadioButton Name="Button_DarkTheme" 
-                                            Content="{DynamicResource Text_Theme_Dark}"
+                    <aleethey:SimpleRadioButton Name="Button_DarkTheme" 
+                                            Content="{DynamicResource LangRes_SettingsPage_Theme_Dark}"
                                             ContentStringFormat=""
                                             Icon="{StaticResource Geometry_Icon_DarkMode}"
                                             IconWidth="22"
@@ -70,8 +70,8 @@
                                             Margin="0,7,0,0" 
                                             Click="Button_DarkTheme_Click" />
 
-                    <joel:SimpleRadioButton Name="Button_LightTheme"
-                                            Content="{DynamicResource Text_Theme_Light}"
+                    <aleethey:SimpleRadioButton Name="Button_LightTheme"
+                                            Content="{DynamicResource LangRes_SettingsPage_Theme_Light}"
                                             ContentStringFormat=""
                                             Icon="{StaticResource Geometry_Icon_LightMode}"
                                             IconWidth="22"

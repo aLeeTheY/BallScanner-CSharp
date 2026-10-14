@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.Base;
+using BallScanner.MVVM.Base;
 using BallScanner.MVVM.Commands;
 using BallScanner.MVVM.Models.Main;
 using Microsoft.Win32;
@@ -249,23 +249,23 @@ namespace BallScanner.MVVM.ViewModels.Main
                             }
                             catch (FileNotFoundException ex)
                             {
-                                App.WriteMsg2Log("Ошибка \"" + nameof(FileNotFoundException) + "\"! Текст ошибки: " + ex.Message, LoggerTypes.ERROR);
-                                MessageBox.Show("Текст ошибки: " + ex.Message, "Ошибка \"" + nameof(FileNotFoundException) + "\"!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                App.WriteMsg2Log("Ошибка \"" + nameof(FileNotFoundException) + "\"! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.ERROR);
+                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleFileNotFound"), MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                             catch (ArgumentException ex)
                             {
-                                App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\"! Текст ошибки: " + ex.Message, LoggerTypes.ERROR);
-                                MessageBox.Show("Текст ошибки: " + ex.Message, "Ошибка \"" + nameof(ArgumentException) + "\"!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\"! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.ERROR);
+                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleArgument"), MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                             catch (UriFormatException ex)
                             {
-                                App.WriteMsg2Log("Ошибка \"" + nameof(UriFormatException) + "\"! Текст ошибки: " + ex.Message, LoggerTypes.ERROR);
-                                MessageBox.Show("Текст ошибки: " + ex.Message, "Ошибка \"" + nameof(UriFormatException) + "\"!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                App.WriteMsg2Log("Ошибка \"" + nameof(UriFormatException) + "\"! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.ERROR);
+                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUriFormat"), MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                             catch (Exception ex)
                             {
-                                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + ex.Message, LoggerTypes.FATAL);
-                                MessageBox.Show("Текст ошибки: " + ex.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         };
                         worker_DownloadExecute.RunWorkerAsync();
@@ -300,7 +300,8 @@ namespace BallScanner.MVVM.ViewModels.Main
                         worker_DownloadExecute.WorkerReportsProgress = true;
                         worker_DownloadExecute.WorkerSupportsCancellation = false;
                         worker_DownloadExecute.ProgressChanged += ProgressChanged;
-                        worker_DownloadExecute.DoWork += delegate {
+                        worker_DownloadExecute.DoWork += delegate
+                        {
                             if (Data != null && Data.Length > 0)
                             {
                                 int progress = 0;
@@ -348,7 +349,7 @@ namespace BallScanner.MVVM.ViewModels.Main
                                     Data[i].NumberOfBlackPixels = numberOfBlackPixels;
 
                                     Interlocked.Increment(ref progress);
-                                    lock(locker)worker_DownloadExecute.ReportProgress(progress);
+                                    lock (locker) worker_DownloadExecute.ReportProgress(progress);
                                 });
 
                                 // Поиск среднего
@@ -408,13 +409,13 @@ namespace BallScanner.MVVM.ViewModels.Main
             }
             catch (ArgumentException e)
             {
-                App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\" в методе \"" + nameof(GetThresholdBitmap) + "\". Активная страница \"Калибровка\". Текст ошибки: " + e.Message, LoggerTypes.ERROR);
-                MessageBox.Show("Текст ошибки: " + e.Message, "Ошибка \"" + nameof(ArgumentException) + "\"!", MessageBoxButton.OK, MessageBoxImage.Error);
+                App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\" в методе \"" + nameof(GetThresholdBitmap) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.ERROR);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleArgument"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception e)
             {
-                App.WriteMsg2Log("Непредвиденная ошибка в методе \"" + nameof(GetThresholdBitmap) + "\". Активная страница \"Калибровка\". Текст ошибки: " + e.Message, LoggerTypes.FATAL);
-                MessageBox.Show("Текст ошибки: " + e.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                App.WriteMsg2Log("Непредвиденная ошибка в методе \"" + nameof(GetThresholdBitmap) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.FATAL);
+                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return null;
@@ -494,13 +495,13 @@ namespace BallScanner.MVVM.ViewModels.Main
                     }
                     catch (ArgumentException e)
                     {
-                        App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\" в методе \"" + nameof(UpdateImage) + "\". Активная страница \"Калибровка\". Текст ошибки: " + e.Message, LoggerTypes.ERROR);
-                        MessageBox.Show("Текст ошибки: " + e.Message, "Ошибка \"" + nameof(ArgumentException) + "\"!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\" в методе \"" + nameof(UpdateImage) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.ERROR);
+                        MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleArgument"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     catch (Exception e)
                     {
-                        App.WriteMsg2Log("Непредвиденная ошибка в методе \"" + nameof(UpdateImage) + "\". Активная страница \"Калибровка\". Текст ошибки: " + e.Message, LoggerTypes.FATAL);
-                        MessageBox.Show("Текст ошибки: " + e.Message, "Непредвиденная ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        App.WriteMsg2Log("Непредвиденная ошибка в методе \"" + nameof(UpdateImage) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.FATAL);
+                        MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 });
             }

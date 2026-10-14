@@ -1,4 +1,4 @@
-﻿using BallScanner.MVVM.ViewModels.Main;
+using BallScanner.MVVM.ViewModels.Main;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,13 +16,14 @@ namespace BallScanner.MVVM.Views.Main
             {
                 AccountManagmentButton.Visibility = Visibility.Visible;
                 AccountManagmentButton.IsEnabled = true;
-            } else
+            }
+            else
             {
                 switch (App.CurrentUser._access_level)
                 {
                     case 0:
                         // user
-                        AccountButton.Margin = new Thickness(0,0,0,0);
+                        AccountButton.Margin = new Thickness(0, 0, 0, 0);
                         break;
                     case 1:
                         // admin
@@ -53,19 +54,19 @@ namespace BallScanner.MVVM.Views.Main
                     AccountButton.IsChecked = true;
                     break;
                 case 2:
-                    ScanButton.IsChecked= true;
+                    ScanButton.IsChecked = true;
                     break;
                 case 3:
-                    CalibrateButton.IsChecked= true;
+                    CalibrateButton.IsChecked = true;
                     break;
                 case 4:
-                    DocumentsButton.IsChecked= true;
+                    DocumentsButton.IsChecked = true;
                     break;
                 case 5:
-                    SettingsButton.IsChecked= true;
+                    SettingsButton.IsChecked = true;
                     break;
                 case 6:
-                    AboutButton.IsChecked= true;
+                    AboutButton.IsChecked = true;
                     break;
             }
         }
