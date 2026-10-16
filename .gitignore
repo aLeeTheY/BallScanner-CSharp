@@ -62,6 +62,9 @@
 # ! --- 6. Installer scripts
 # ! ------------------------
 !**/*.iss
+!**/*.nsi
+
+!**/installer/output/.gitkeep
 
 # ! --- 7. Documentation
 # ! --------------------
@@ -108,7 +111,7 @@
 **/NLog.xsd.tmp
 
 # * INSTALLER OUTPUT
-**/installer/output/
+**/installer/output/*.exe
 
 # * OS FILES
 **/.DS_Store
