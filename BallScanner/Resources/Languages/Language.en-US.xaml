@@ -3,10 +3,10 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!-- * Windows titles -->
-    <sys:String x:Key="LangRes_MainWindow_Title">Ball Scanner: Главное окно</sys:String>
-    <sys:String x:Key="LangRes_LoginWindow_Title">Ball Scanner: Окно входа</sys:String>
-    <sys:String x:Key="LangRes_RegistrationWindow_Title">Ball Scanner: Окно регистрации</sys:String>
-    <sys:String x:Key="LangRes_EditWindow_Title">Ball Scanner: Окно редактирования</sys:String>
+    <sys:String x:Key="LangRes_MainWindow_Title">Ball Scanner: Main window</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_Title">Ball Scanner: Authorization window</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_Title">Ball Scanner: Registration window</sys:String>
+    <sys:String x:Key="LangRes_EditWindow_Title">Ball Scanner: Edit window</sys:String>
 
     <!-- * Menu component -->
     <sys:String x:Key="LangRes_MenuComponent_BlockLabel">Menu</sys:String>
