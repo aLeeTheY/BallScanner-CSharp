@@ -79,6 +79,9 @@ namespace aLeeTheY.Controls
                     AddToSecureString(" ");
                     keyEventArgs.Handled = true;
                     break;
+                case Key.Enter:
+                    keyEventArgs.Handled = true;
+                    break;
                 case Key.Back:
                 case Key.Delete:
                     if (SelectionLength > 0)
