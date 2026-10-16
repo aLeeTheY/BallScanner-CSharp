@@ -54,6 +54,7 @@ namespace BallScanner.MVVM.Models.Main
                 _ballGrade = value;
                 OnPropertyChanged(nameof(BallGrade));
                 OnPropertyChanged(nameof(BallGrade_Text));
+                OnPropertyChanged(nameof(IsDefective));
             }
         }
 
