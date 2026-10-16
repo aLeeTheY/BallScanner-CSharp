@@ -1,20 +1,99 @@
+using aLeeTheY.Controls;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace BallScanner.MVVM.Views.Main
 {
     public partial class SettingsV : UserControl
     {
+        private DataTemplate DefaultState;
+        private DataTemplate MinState;
+
         public SettingsV()
         {
             InitializeComponent();
 
-            if (Properties.Settings.Default.IsDarkTheme) Button_DarkTheme.IsChecked = true;
-            else Button_LightTheme.IsChecked = true;
+            DefaultState = FindResource("DefaultState") as DataTemplate;
+            MinState = FindResource("MinState") as DataTemplate;
 
-            if (Properties.Settings.Default.Language.Name == "ru-RU") Button_LanguageRussian.IsChecked = true;
-            else Button_LanguageEnglish.IsChecked = true;
+            Loaded += SettingsV_Loaded;
+        }
+
+        private void SettingsV_Loaded(object sender, RoutedEventArgs e)
+        {
+            ApplyRadioState();
+        }
+
+        private void Border_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (DefaultState == null || MinState == null) return;
+
+            if (e.NewSize.Width < 1007)
+            {
+                if (MyContentControl.ContentTemplate == MinState) return;
+                MyContentControl.ContentTemplate = MinState;
+            }
+            else
+            {
+                if (MyContentControl.ContentTemplate == DefaultState) return;
+                MyContentControl.ContentTemplate = DefaultState;
+            }
+
+            // После переключения шаблона — применить состояние кнопок
+            ApplyRadioState();
+        }
+
+        private void ApplyRadioState()
+        {
+            // Отложить до момента, когда WPF построит визуальное дерево шаблона
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                bool isDark = Properties.Settings.Default.IsDarkTheme;
+                bool isRussian = Properties.Settings.Default.Language.Name == "ru-RU";
+
+                foreach (var rb in FindVisualChildren<SimpleRadioButton>(this))
+                {
+                    switch (rb.Name)
+                    {
+                        case "Button_DarkTheme":
+                        case "Button_DarkTheme_Min":
+                            rb.IsChecked = isDark;
+                            break;
+                        case "Button_LightTheme":
+                        case "Button_LightTheme_Min":
+                            rb.IsChecked = !isDark;
+                            break;
+                        case "Button_LanguageRussian":
+                        case "Button_LanguageRussian_Min":
+                            rb.IsChecked = isRussian;
+                            break;
+                        case "Button_LanguageEnglish":
+                        case "Button_LanguageEnglish_Min":
+                            rb.IsChecked = !isRussian;
+                            break;
+                    }
+                }
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        private static System.Collections.Generic.IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+        {
+            if (parent == null)
+                yield break;
+
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is T typed)
+                    yield return typed;
+
+                foreach (var descendant in FindVisualChildren<T>(child))
+                    yield return descendant;
+            }
         }
 
         private void Button_DarkTheme_Click(object sender, RoutedEventArgs e)
