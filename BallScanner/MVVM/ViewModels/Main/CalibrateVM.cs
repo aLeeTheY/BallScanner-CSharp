@@ -39,7 +39,7 @@ namespace BallScanner.MVVM.ViewModels.Main
                 }
 
                 _decodePixelHeight = (int)(_decodePixelHeight * scaleY);
-                if (Data != null && Data.Length != 0) UpdateImage(300);
+                if (Data != null && Data.Length != 0) UpdateImage(100);
             }
         }
 
@@ -97,7 +97,7 @@ namespace BallScanner.MVVM.ViewModels.Main
                 Properties.Settings.Default.Threshold = ThresholdValue;
                 Properties.Settings.Default.Save();
 
-                if (Data != null && Data.Length != 0 && !isDragging) UpdateImage(300);
+                if (Data != null && Data.Length != 0 && !isDragging) UpdateImage(100);
             }
         }
 
@@ -278,7 +278,7 @@ namespace BallScanner.MVVM.ViewModels.Main
                     {
                         Interlocked.Decrement(ref currentImageIndex);
                         OnPropertyChanged(nameof(CurrentData));
-                        UpdateImage(300);
+                        UpdateImage(100);
                     }
                     break;
                 case "Button_NextImage":
@@ -288,7 +288,7 @@ namespace BallScanner.MVVM.ViewModels.Main
                     {
                         Interlocked.Increment(ref currentImageIndex);
                         OnPropertyChanged(nameof(CurrentData));
-                        UpdateImage(300);
+                        UpdateImage(100);
                     }
                     break;
                 case "Button_Execute":
@@ -300,66 +300,59 @@ namespace BallScanner.MVVM.ViewModels.Main
                         worker_DownloadExecute.WorkerReportsProgress = true;
                         worker_DownloadExecute.WorkerSupportsCancellation = false;
                         worker_DownloadExecute.ProgressChanged += ProgressChanged;
+
                         worker_DownloadExecute.DoWork += delegate
                         {
                             if (Data != null && Data.Length > 0)
                             {
                                 int progress = 0;
-                                AvgNumBlackPixels = 0;
-                                object locker = new object();
+                                long sum = 0;
 
-                                Parallel.For(0, Data.Length, i =>
+                                byte threshold = ThresholdValue;
+
+                                int first = FirstThreshold;
+                                int second = SecondThreshold;
+
+                                ImageData[] data = Data;
+                                int total = data.Length;
+
+                                // Число ядер процессора
+                                int cores = Environment.ProcessorCount;
+
+                                // обновлять прогресс раз в 5 картинок (для партии из 100 — 20 обновлений)
+                                //int reportEvery = Math.Max(1, total / 50);
+
+                                // Параллельность только по картинкам
+                                Parallel.For(0, data.Length, new ParallelOptions
                                 {
-                                    int numberOfBlackPixels = 0;
-                                    using (var bitmap = GetThresholdBitmap(Data[i].ImagePath, ThresholdValue))
-                                    {
-                                        unsafe
-                                        {
-                                            Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-                                            BitmapData bitmapData = bitmap.LockBits(rect, ImageLockMode.WriteOnly, bitmap.PixelFormat);
+                                    MaxDegreeOfParallelism = cores
+                                }, i =>
+                                {
+                                    int blackPixels = CountBlackPixels(data[i].ImagePath, threshold);
 
-                                            int bytesPerPixel = Bitmap.GetPixelFormatSize(bitmap.PixelFormat) / 8;
-                                            int heightInPixels = bitmapData.Height;
-                                            int widthInBytes = bitmapData.Width * bytesPerPixel;
-                                            byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
+                                    BallGrade grade;
+                                    if (blackPixels <= first) grade = BallGrade.FIRST;
+                                    else if (blackPixels <= second) grade = BallGrade.SECOND;
+                                    else grade = BallGrade.DEFECTIVE;
 
-                                            Parallel.For(0, heightInPixels, y =>
-                                            {
-                                                byte* currentLine = PtrFirstPixel + (y * bitmapData.Stride);
-                                                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
-                                                {
-                                                    // optimized
-                                                    if (currentLine[x] == 0)
-                                                        Interlocked.Increment(ref numberOfBlackPixels);
-                                                }
-                                            });
+                                    // Обновляем картинку сразу — таблица наполняется в реальном времени
+                                    data[i].NumberOfBlackPixels = blackPixels;
+                                    data[i].BallGrade = grade;
 
-                                            bitmap.UnlockBits(bitmapData);
-                                        }
-                                    }
+                                    Interlocked.Add(ref sum, blackPixels);
+                                    int currentProgress = Interlocked.Increment(ref progress);
 
-                                    // Определение сорта стеклошарика
-                                    if (numberOfBlackPixels <= FirstThreshold)
-                                        Data[i].BallGrade = BallGrade.FIRST;
-                                    else if (numberOfBlackPixels <= SecondThreshold)
-                                        Data[i].BallGrade = BallGrade.SECOND;
-                                    else
-                                        Data[i].BallGrade = BallGrade.DEFECTIVE;
+                                    // Progress bar обновляется на каждой картинке
+                                    worker_DownloadExecute.ReportProgress(currentProgress);
 
-                                    Data[i].NumberOfBlackPixels = numberOfBlackPixels;
-
-                                    Interlocked.Increment(ref progress);
-                                    lock (locker) worker_DownloadExecute.ReportProgress(progress);
+                                    //if (currentProgress % reportEvery == 0 || currentProgress == total)
+                                    //{
+                                    //    worker_DownloadExecute.ReportProgress(currentProgress);
+                                    //}
                                 });
 
-                                // Поиск среднего
-                                foreach (var obj in Data)
-                                {
-                                    AvgNumBlackPixels += obj.NumberOfBlackPixels;
-                                }
-                                AvgNumBlackPixels /= ImagesCount;
-
-                                App.WriteMsg2Log("Завершено сканирование " + Data.Length + " изображений на странице \"Калибровка\"! Среднее число чёрных пикселей = " + AvgNumBlackPixels + ". Порогое значение ползунка = " + ThresholdValue + ". Первое порогое значение = " + FirstThreshold + ". Второе пороговое значение = " + SecondThreshold + ".", LoggerTypes.INFO);
+                                AvgNumBlackPixels = sum / total;
+                                App.WriteMsg2Log($"Завершено сканирование {total} изображений на странице \"Калибровка\"! Среднее число чёрных пикселей = {AvgNumBlackPixels}. Пороговое значение ползунка = {threshold}. Первое пороговое значение = {first}. Второе пороговое значение = {second}.", LoggerTypes.INFO);
                             }
                         };
                         worker_DownloadExecute.RunWorkerAsync();
@@ -378,47 +371,83 @@ namespace BallScanner.MVVM.ViewModels.Main
             }
         }
 
-        private Bitmap GetThresholdBitmap(string path, short thresholdValue)
+        private unsafe int CountBlackPixels(string path, byte threshold)
         {
+            using (Bitmap original = new Bitmap(path))
+            {
+                Rectangle rect = new Rectangle(0, 0, original.Width, original.Height);
+                BitmapData data = original.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+                try
+                {
+                    int stride = data.Stride;
+
+                    int width = original.Width;
+                    int height = original.Height;
+
+                    byte* ptr = (byte*)data.Scan0;
+
+                    int count = 0;
+                    for (int y = 0; y < height; y++)
+                    {
+                        byte* row = ptr + y * stride;
+                        for (int x = 0; x < width; x++)
+                        {
+                            int offset = x * 4;
+                            int b = row[offset];
+                            int g = row[offset + 1];
+                            int r = row[offset + 2];
+
+                            // Целочисленный grayscale (быстрее float-матрицы в 3-4 раза)
+                            int gray = (r * 77 + g * 150 + b * 29) >> 8;
+
+                            if (gray < threshold) count++;
+                        }
+                    }
+
+                    return count;
+                }
+                finally { original.UnlockBits(data); }
+            }
+        }
+
+        private unsafe Bitmap GetThresholdBitmap(string path, byte threshold)
+        {
+            Bitmap original = new Bitmap(path);
+            Rectangle rect = new Rectangle(0, 0, original.Width, original.Height);
+            BitmapData data = original.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+
             try
             {
-                Bitmap original = new Bitmap(path);
+                int stride = data.Stride;
 
-                // gray bitmap
-                using (Graphics g = Graphics.FromImage(original))
+                int width = original.Width;
+                int height = original.Height;
+
+                byte* ptr = (byte*)data.Scan0;
+
+                for (int y = 0; y < height; y++)
                 {
-                    var gray_matrix = new float[][] {
-                        new float[] { 0.299f, 0.299f, 0.299f, 0, 0 },
-                        new float[] { 0.587f, 0.587f, 0.587f, 0, 0 },
-                        new float[] { 0.114f, 0.114f, 0.114f, 0, 0 },
-                        new float[] { 0,      0,      0,      1, 0 },
-                        new float[] { 0,      0,      0,      0, 1 }
-                    };
+                    byte* row = ptr + y * stride;
+                    for (int x = 0; x < width; x++)
+                    {
+                        int offset = x * 4;
+                        int b = row[offset];
+                        int g = row[offset + 1];
+                        int r = row[offset + 2];
+                        int gray = (r * 77 + g * 150 + b * 29) >> 8;
 
-                    var attributes = new ImageAttributes();
-                    float threshold = (float)(ThresholdValue / 255.0d);
-
-                    attributes.SetColorMatrix(new ColorMatrix(gray_matrix));
-                    attributes.SetThreshold(threshold, ColorAdjustType.Default);
-
-                    var rect = new Rectangle(0, 0, original.Width, original.Height);
-                    g.DrawImage(original, rect, 0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+                        byte v = gray < threshold ? (byte)0 : (byte)255;
+                        row[offset] = v;
+                        row[offset + 1] = v;
+                        row[offset + 2] = v;
+                        row[offset + 3] = 255;
+                    }
                 }
+            }
+            finally { original.UnlockBits(data); }
 
-                return original;
-            }
-            catch (ArgumentException e)
-            {
-                App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\" в методе \"" + nameof(GetThresholdBitmap) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.ERROR);
-                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleArgument"), MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception e)
-            {
-                App.WriteMsg2Log("Непредвиденная ошибка в методе \"" + nameof(GetThresholdBitmap) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.FATAL);
-                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            return null;
+            return original;
         }
 
         private async void UpdateImage(int delay)
@@ -434,30 +463,11 @@ namespace BallScanner.MVVM.ViewModels.Main
                 //if (Data == null || Data.Length == 0 || currentImageIndex < 0 || currentImageIndex > Data.Length - 1) return;
                 await Task.Run(() =>
                 {
+                    Bitmap original = null;
+
                     try
                     {
-                        Bitmap original = new Bitmap(Data[currentImageIndex].ImagePath);
-
-                        // gray bitmap
-                        using (Graphics g = Graphics.FromImage(original))
-                        {
-                            var gray_matrix = new float[][] {
-                                new float[] { 0.299f, 0.299f, 0.299f, 0, 0 },
-                                new float[] { 0.587f, 0.587f, 0.587f, 0, 0 },
-                                new float[] { 0.114f, 0.114f, 0.114f, 0, 0 },
-                                new float[] { 0,      0,      0,      1, 0 },
-                                new float[] { 0,      0,      0,      0, 1 }
-                            };
-
-                            var attributes = new ImageAttributes();
-                            float threshold = (float)(ThresholdValue / 255.0d);
-
-                            attributes.SetColorMatrix(new ColorMatrix(gray_matrix));
-                            attributes.SetThreshold(threshold, ColorAdjustType.Default);
-
-                            var rect = new Rectangle(0, 0, original.Width, original.Height);
-                            g.DrawImage(original, rect, 0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
-                        }
+                        original = GetThresholdBitmap(Data[currentImageIndex].ImagePath, (byte)myThresholdValue);
 
                         // actually ?
                         if (myImageIndex != currentImageIndex) return;
@@ -467,8 +477,6 @@ namespace BallScanner.MVVM.ViewModels.Main
                         {
                             original.Save(memory, ImageFormat.Bmp);
                             int imgHeight = original.Height;
-                            original.Dispose();
-
                             memory.Position = 0;
 
                             BitmapImage bitmapImage = new BitmapImage();
@@ -487,11 +495,6 @@ namespace BallScanner.MVVM.ViewModels.Main
                             CurrentImage = bitmapImage;
                         }
 
-                        original.Dispose();
-
-                        // delete old image
-                        //GC.Collect();
-                        //GC.WaitForPendingFinalizers();
                     }
                     catch (ArgumentException e)
                     {
@@ -502,6 +505,10 @@ namespace BallScanner.MVVM.ViewModels.Main
                     {
                         App.WriteMsg2Log("Непредвиденная ошибка в методе \"" + nameof(UpdateImage) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.FATAL);
                         MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    finally
+                    {
+                        original?.Dispose();
                     }
                 });
             }
