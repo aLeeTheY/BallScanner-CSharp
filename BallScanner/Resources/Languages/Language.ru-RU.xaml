@@ -4,7 +4,7 @@
 
     <!-- * Заголовки окон -->
     <sys:String x:Key="LangRes_MainWindow_Title">Ball Scanner: Главное окно</sys:String>
-    <sys:String x:Key="LangRes_LoginWindow_Title">Ball Scanner: Окно входа</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_Title">Ball Scanner: Окно авторизации</sys:String>
     <sys:String x:Key="LangRes_RegistrationWindow_Title">Ball Scanner: Окно регистрации</sys:String>
     <sys:String x:Key="LangRes_EditWindow_Title">Ball Scanner: Окно редактирования</sys:String>
 
