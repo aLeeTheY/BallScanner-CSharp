@@ -82,6 +82,11 @@
 # ! ------------
 *.pdf binary
 
+# ! --- 11. Installer scripts
+# ! -------------------------
+*.iss text working-tree-encoding=UTF-8 eol=crlf
+*.nsi text working-tree-encoding=UTF-8 eol=crlf
+
 # ! --- 11. GitHub Linguist settings
 # ! --------------------------------
 # Если хочешь, чтобы какие-то папки не считались в статистике языков
