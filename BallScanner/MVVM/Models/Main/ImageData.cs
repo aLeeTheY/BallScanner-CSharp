@@ -87,5 +87,7 @@ namespace BallScanner.MVVM.Models.Main
                 _imagePath = value;
             }
         }
+
+        public bool IsDefective => BallGrade == BallGrade.DEFECTIVE;
     }
 }

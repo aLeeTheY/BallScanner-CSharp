@@ -96,6 +96,9 @@ namespace BallScanner
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
+            // Заставляем CWD быть папкой с exe, независимо от ярлыка
+            System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
             Logger log = LogManager.GetLogger("Неавторизованный пользователь");
             log.Info("Запуск приложения");
 

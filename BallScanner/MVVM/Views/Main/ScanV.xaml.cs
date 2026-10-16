@@ -21,6 +21,20 @@ namespace BallScanner.MVVM.Views.Main
             MinState = FindResource("MinState") as DataTemplate;
         }
 
+        private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (isMinState)
+            {
+                foreach (var sv in FindVisualChildren<ScrollViewer>(this))
+                {
+                    if (sv.Name == "sv")
+                    {
+                        sv.ScrollToVerticalOffset(sv.ContentVerticalOffset - e.Delta);
+                    }
+                }
+            }
+        }
+
         private void Border_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
         {
             if (DefaultState == null || MinState == null) return;
@@ -38,20 +52,6 @@ namespace BallScanner.MVVM.Views.Main
                 MyContentControl.ContentTemplate = DefaultState;
 
                 isMinState = false;
-            }
-        }
-
-        private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (isMinState)
-            {
-                foreach (var sv in FindVisualChildren<ScrollViewer>(this))
-                {
-                    if (sv.Name == "sv")
-                    {
-                        sv.ScrollToVerticalOffset(sv.ContentVerticalOffset - e.Delta);
-                    }
-                }
             }
         }
 

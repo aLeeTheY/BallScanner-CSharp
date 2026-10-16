@@ -2,6 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <!-- * Windows titles -->
+    <sys:String x:Key="LangRes_MainWindow_Title">Ball Scanner: Главное окно</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_Title">Ball Scanner: Окно входа</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_Title">Ball Scanner: Окно регистрации</sys:String>
+    <sys:String x:Key="LangRes_EditWindow_Title">Ball Scanner: Окно редактирования</sys:String>
+
     <!-- * Menu component -->
     <sys:String x:Key="LangRes_MenuComponent_BlockLabel">Menu</sys:String>
 
@@ -161,8 +167,8 @@
 
     <sys:String x:Key="LangRes_RegistrationWindow_AddBtn">Add</sys:String>
 
-    <sys:String x:Key="LangRes_RegistrationWindow_HintText__Part_1">Fields marked with an asterisk are required.</sys:String>
-    <sys:String x:Key="LangRes_RegistrationWindow_HintText__Part_2">Password must be at least 4 characters long.</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_HintText__Part_1">*Password must be at least 4 characters long.</sys:String>
+    <sys:String x:Key="LangRes_RegistrationWindow_HintText__Part_2">Fields marked with an asterisk (*) are required.</sys:String>
 
     <!-- * Window "Edit report" -->
     <sys:String x:Key="LangRes_EditReportsWindow_DateLabel">Date</sys:String>

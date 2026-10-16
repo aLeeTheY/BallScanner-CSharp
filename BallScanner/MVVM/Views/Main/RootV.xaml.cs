@@ -1,29 +1,17 @@
-//using System;
-//using System.Diagnostics;
-//using System.Drawing;
+using BallScanner.MVVM.ViewModels.Main;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using BallScanner.MVVM.ViewModels.Main;
-//using System.Windows.Forms;
-//using System.Windows.Interop;
-//using System.Windows.Shell;
-//using Microsoft.Win32;
 
 namespace BallScanner.MVVM.Views.Main
 {
     public partial class RootV : Window
     {
-        //private string currentDisplayName;
-        //private WindowChrome MyWindowChrome;
-        //private static double prevDpiX = 0, prevDpiY = 0;
-
         public RootV()
         {
             InitializeComponent();
             DataContext = new RootVM();
-            //SizeChanged += OnWindowSizeChanged;
 
             SourceInitialized += (s, e) =>
             {
@@ -51,20 +39,6 @@ namespace BallScanner.MVVM.Views.Main
         {
             Application.Current.MainWindow = this;
         }
-
-        //private static void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
-        //{
-        //    var window = (Window)sender;
-        //    var content = (FrameworkElement)window.Content;
-
-        //    window.MinWidth = window.ActualWidth - content.ActualWidth + content.MinWidth;
-        //    window.MaxWidth = window.ActualWidth - content.ActualWidth + content.MaxWidth;
-
-        //    window.MinHeight = window.ActualHeight - content.ActualHeight + content.MinHeight;
-        //    window.MaxHeight = window.ActualHeight - content.ActualHeight + content.MaxHeight;
-
-        //    window.SizeChanged -= OnWindowSizeChanged;
-        //}
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MyPoint
@@ -189,9 +163,6 @@ namespace BallScanner.MVVM.Views.Main
                 mmi.pointMaxSize.x = Math.Abs(workArea.right - workArea.left);
                 mmi.pointMaxSize.y = Math.Abs(workArea.bottom - workArea.top);
 
-                //Console.WriteLine("PointMaxSize.X = " + mmi.pointMaxSize.x);
-                //Console.WriteLine("PointMaxSize.Y = " + mmi.pointMaxSize.y);
-
                 var main = Application.Current.MainWindow;
                 PresentationSource source = PresentationSource.FromVisual(main);
 
@@ -221,74 +192,5 @@ namespace BallScanner.MVVM.Views.Main
 
             return (IntPtr)0;
         }
-
-        #region Old
-        //private void OnLocationChanged(object sender, EventArgs e)
-        //{
-        //    Screen screen = Screen.FromHandle((new WindowInteropHelper(this)).Handle);
-        //    if (currentDisplayName == screen.DeviceName)
-        //    {
-        //        return;
-        //    }
-
-        //    ChangeMaxWidthAndMaxHeight(screen);
-        //    currentDisplayName = screen.DeviceName;
-        //}
-
-        //private void OnDisplaySettingsChanged(object sender, EventArgs e)
-        //{
-        //    Screen screen = Screen.FromHandle((new WindowInteropHelper(this)).Handle);
-        //    ChangeMaxWidthAndMaxHeight(screen);
-
-        //    // Refresh window state
-        //    if (WindowState == WindowState.Maximized)
-        //    {
-        //        WindowState = WindowState.Normal;
-        //        WindowState = WindowState.Maximized;
-        //    }
-        //}
-
-        //private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        //{
-        //    Screen screen = Screen.FromHandle((new WindowInteropHelper(this)).Handle);
-        //    if (currentDisplayName == screen.DeviceName)
-        //    {
-        //        return;
-        //    }
-
-        //    ChangeMaxWidthAndMaxHeight(screen);
-        //    currentDisplayName = screen.DeviceName;
-        //}
-
-        //private void ChangeMaxWidthAndMaxHeight(Screen screen)
-        //{
-        //    Graphics g = Graphics.FromHwnd(IntPtr.Zero);
-
-        //    double scaleFactorX = g.DpiX / 96.0d;
-        //    double scaleFactorY = g.DpiY / 96.0d;
-
-        //    MaxHeight = screen.WorkingArea.Height / scaleFactorY
-        //        + MyWindowChrome.ResizeBorderThickness.Top
-        //        + MyWindowChrome.ResizeBorderThickness.Bottom;
-
-        //    MaxWidth = screen.WorkingArea.Width / scaleFactorX
-        //        + MyWindowChrome.ResizeBorderThickness.Left
-        //        + MyWindowChrome.ResizeBorderThickness.Right;
-
-        //    Debug.WriteLine("X: DPI = " + g.DpiX + " Screen Width = " + screen.WorkingArea.Width + " WPF Width = " + MaxWidth);
-        //    Debug.WriteLine("Y: DPI = " + g.DpiY + " Screen Height = " + screen.WorkingArea.Height + " WPF Height = " + MaxHeight);
-        //}
-
-        //public override void OnApplyTemplate()
-        //{
-        //    base.OnApplyTemplate();
-        //}
-
-        //public T GetRequiredTemplateChild<T>(string childName) where T : DependencyObject
-        //{
-        //    return (T)base.GetTemplateChild(childName);
-        //}
-
-        #endregion
     }
 }

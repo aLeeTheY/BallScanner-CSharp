@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BallScanner.MVVM.Views.Add.RegistrationV"
+<UserControl x:Class="BallScanner.MVVM.Views.Add.RegistrationV"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -94,6 +94,7 @@
             <StackPanel DockPanel.Dock="Bottom"
                         HorizontalAlignment="Center"
                         Orientation="Vertical">
+
                 <TextBlock FontSize="14"
                            Foreground="{StaticResource Brush_OnBackground_OnSurface_Medium}"
                            Text="{DynamicResource LangRes_RegistrationWindow_HintText__Part_1}"
@@ -102,6 +103,7 @@
                            Foreground="{StaticResource Brush_OnBackground_OnSurface_Medium}"
                            Text="{DynamicResource LangRes_RegistrationWindow_HintText__Part_2}"
                            TextAlignment="Center" />
+                
             </StackPanel>                    
 
         </DockPanel>
