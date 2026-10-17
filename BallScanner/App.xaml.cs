@@ -5,6 +5,7 @@ using System;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -21,6 +22,7 @@ namespace BallScanner
 
     public partial class App : Application
     {
+        private static Mutex _singleInstanceMutex;
         // Auth
         private static User _currentUser = null;
         public static User CurrentUser
@@ -98,6 +100,17 @@ namespace BallScanner
         {
             // Заставляем CWD быть папкой с exe, независимо от ярлыка
             System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
+            // Создаём именованный мьютекс — установщик ищет его по имени
+            bool createdNew;
+            _singleInstanceMutex = new System.Threading.Mutex(true, "Global\\BallScannerApp", out createdNew);
+
+            if (!createdNew)
+            {
+                MessageBox.Show("Ball Scanner уже запущен.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Shutdown();
+                return;
+            }
 
             Logger log = LogManager.GetLogger("Неавторизованный пользователь");
             log.Info("Запуск приложения");
@@ -191,6 +204,22 @@ namespace BallScanner
 
                 Logger log = LogManager.GetLogger("Неавторизованный пользователь");
                 log.Info("Выход из приложения!");
+            }
+
+            // Мьютекс освобождаем последним — пока приложение не завершилось,
+            // установщик должен видеть его запущенным
+            if (_singleInstanceMutex != null)
+            {
+                try
+                {
+                    _singleInstanceMutex.ReleaseMutex();
+                }
+                catch (ApplicationException)
+                {
+                    // Мьютекс не принадлежит этому потоку — игнорируем
+                }
+                _singleInstanceMutex.Dispose();
+                _singleInstanceMutex = null;
             }
         }
 
