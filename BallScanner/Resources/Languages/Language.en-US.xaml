@@ -140,7 +140,7 @@
     <sys:String x:Key="LangRes_SettingsPage_Language_Russian_AlwaysOnRussian">Русский, Россия</sys:String>
     <sys:String x:Key="LangRes_SettingsPage_Language_English_AlwaysOnEnglish">English, USA</sys:String>
 
-    <sys:String x:Key="LangRes_SettingsPage_Theme_Light">Light - beta</sys:String>
+    <sys:String x:Key="LangRes_SettingsPage_Theme_Light">Light (beta)</sys:String>
     <sys:String x:Key="LangRes_SettingsPage_Theme_Dark">Dark</sys:String>
 
     <!-- * Page "About" -->
@@ -203,8 +203,8 @@
 
     <!-- * Window "Authorization" -->
     <sys:String x:Key="LangRes_LoginWindow_AuthBlockLabel">Authorization</sys:String>
-    <sys:String x:Key="LangRes_LoginWindow_LoginLabel">Login</sys:String>
-    <sys:String x:Key="LangRes_LoginWindow_PasswordLabel">Password</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_LoginLabel">Login (admin)</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_PasswordLabel">Password (admin)</sys:String>
     <sys:String x:Key="LangRes_LoginWindow_LoginBtn">Sign in</sys:String>
 
     <!-- * Code Inline Text -->

@@ -140,7 +140,7 @@
     <sys:String x:Key="LangRes_SettingsPage_Language_Russian_AlwaysOnRussian">Русский, Россия</sys:String>
     <sys:String x:Key="LangRes_SettingsPage_Language_English_AlwaysOnEnglish">English, USA</sys:String>
 
-    <sys:String x:Key="LangRes_SettingsPage_Theme_Light">Светлая - beta</sys:String>
+    <sys:String x:Key="LangRes_SettingsPage_Theme_Light">Светлая (beta)</sys:String>
     <sys:String x:Key="LangRes_SettingsPage_Theme_Dark">Тёмная</sys:String>
 
     <!-- * Страница "About" -->
@@ -203,8 +203,8 @@
 
     <!-- * Окно "Авторизация" -->
     <sys:String x:Key="LangRes_LoginWindow_AuthBlockLabel">Авторизация</sys:String>
-    <sys:String x:Key="LangRes_LoginWindow_LoginLabel">Логин</sys:String>
-    <sys:String x:Key="LangRes_LoginWindow_PasswordLabel">Пароль</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_LoginLabel">Логин (admin)</sys:String>
+    <sys:String x:Key="LangRes_LoginWindow_PasswordLabel">Пароль (admin)</sys:String>
     <sys:String x:Key="LangRes_LoginWindow_LoginBtn">Войти</sys:String>
 
     <!-- * Code Inline Text -->
