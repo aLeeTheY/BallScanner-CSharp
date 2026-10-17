@@ -10,6 +10,9 @@ SetCompressor /SOLID lzma
 SetCompressorDictSize 64
 
 ; ! --- 2. Директивы препроцессора NSIS (аналог #define cpp)
+!define DOTNET_EXE "ndp48-web.exe"
+!define DOTNET_SRC ".\external\ndp48-web.exe"
+
 !define APP_NAME      "Ball Scanner (64-bit)"
 !define APP_FOLDER    "Ball Scanner"
 !define APP_VERSION   "1.1.0"
@@ -102,74 +105,149 @@ Section "-Install"
     ; * --- 8.3. Кладём туда все файлы программы
     File /r "${APP_SOURCE}\*.*"
 
-    ; * --- 8.4. Создаем uninstaller.exe файл
+    ; * --- 8.4. Выдаём права на Data через icacls
+    nsExec::ExecToLog 'icacls "$INSTDIR\Data" /grant *S-1-5-32-545:(OI)(CI)F /T /C /Q'
+    Pop $0
+    ${If} $0 != 0
+        DetailPrint "Failed to grant permissions on $INSTDIR\Data. Exit code: $0"
+    ${EndIf}
+
+    ; * --- 8.5. Создаем uninstaller.exe файл
     WriteUninstaller "$INSTDIR\Uninstall ${APP_NAME}.exe"
 
-    ; * --- 8.5. Создаем папку в Start Menu folder и создаем ярлык для Start Menu для uninstaller
+    ; * --- 8.6. Создаем папку в Start Menu folder и создаем ярлык для Start Menu для uninstaller
     CreateDirectory "$SMPROGRAMS\${APP_FOLDER}"
     CreateShortcut "$SMPROGRAMS\${APP_FOLDER}\Uninstall ${APP_NAME}.lnk" "$INSTDIR\Uninstall ${APP_NAME}.exe"
 
-    ; * --- 8.6. Запись данных о программе в реестр Windows
+    ; * --- 8.7. Запись данных о программе в реестр Windows
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "DisplayName"     "${APP_NAME}"
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "DisplayVersion"  "${APP_VERSION}"
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "Publisher"       "${APP_PUBLISHER}"
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "URLInfoAbout"    "${APP_URL}"
-    WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "UninstallString" "$INSTDIR\Uninstall ${APP_NAME}.exe"
+    WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "UninstallString" "$\"$INSTDIR\Uninstall ${APP_NAME}.exe$\""
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "DisplayIcon"     "$INSTDIR\${APP_EXE}"
     WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "EstimatedSize"   19900
 SectionEnd
 
-; ! --- 9. Секция со скриптом создания ярлыка на Рабочем столе | Отображается как галочка на странице MUI_PAGE_COMPONENTS | OPTIONAL
+; ! --- 9. Секция .NET Framework 4.8 | Обязательная | Пропускается, если .NET уже стоит
+Section ".NET Framework 4.8" SecDotNet
+    SetOutPath "$PLUGINSDIR"
+    File /oname=${DOTNET_EXE} "${DOTNET_SRC}"
+
+    ; * Если основной установщик запущен с /S — .NET Framework тоже ставим тихо
+    ; * Иначе — показываем GUI-визард установки .NET Framework
+    ${If} ${Silent}
+        ExecWait '"$PLUGINSDIR\${DOTNET_EXE}" /q /norestart' $0
+    ${Else}
+        ExecWait '"$PLUGINSDIR\${DOTNET_EXE}" /norestart' $0
+    ${EndIf}
+
+    ; * Если установщик вернул 3010 — значит нужен ребут
+    ${If} $0 == 3010
+        SetRebootFlag true
+    ${EndIf}
+SectionEnd
+
+; ! --- 10. Секция со скриптом создания ярлыка на Рабочем столе | Отображается как галочка на странице MUI_PAGE_COMPONENTS | OPTIONAL
 Section "$(SEC_DESKTOP_NAME)" SecDesktop
     CreateShortcut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
 SectionEnd
 
-; ! --- 10. Секция со скриптом создания ярлыка в меню Пуск | Отображается как галочка на странице MUI_PAGE_COMPONENTS | OPTIONAL
+; ! --- 11. Секция со скриптом создания ярлыка в меню Пуск | Отображается как галочка на странице MUI_PAGE_COMPONENTS | OPTIONAL
 Section "$(SEC_STARTMENU_NAME)" SecStartMenu
     CreateShortcut "$SMPROGRAMS\${APP_FOLDER}\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
 SectionEnd
 
-; ! --- 11. Cекция со скриптом удаления | Исполняется когда винда страничка MUI_UNPAGE_INSTFILES | REQUIRED
+; ! --- 12. Cекция со скриптом удаления | Исполняется когда винда страничка MUI_UNPAGE_INSTFILES | REQUIRED
 Section "Uninstall"
-    ; * --- 11.1. Удаляем все файлы программы и саму папку программы
+    ; * --- 12.1. Удаляем все файлы программы и саму папку программы
     RMDir /r "$INSTDIR"
 
-    ; * --- 11.2. Чистим за собой ярлыки из Start Menu
+    ; * --- 12.2. Чистим за собой ярлыки из Start Menu
     Delete "$SMPROGRAMS\${APP_FOLDER}\${APP_NAME}.lnk"
     Delete "$SMPROGRAMS\${APP_FOLDER}\Uninstall ${APP_NAME}.lnk"
     RMDir "$SMPROGRAMS\${APP_FOLDER}"
 
-    ; * --- 11.3. Чистим за собой ярлык из Рабочего стола
+    ; * --- 12.3. Чистим за собой ярлык из Рабочего стола
     Delete "$DESKTOP\${APP_NAME}.lnk"
 
-    ; * --- 11.4. Чистим за собой реестр Windows
+    ; * --- 12.4. Чистим за собой реестр Windows
     DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}"
 SectionEnd
 
-; ! --- 12. Вызов окна выбора языка при состоянии .onInit | Callback Function до вызова основного окна installer | REQUIRED
+; ! --- 13. Проверка что приложение не запущено
+!macro CheckAppNotRunning
+    check_loop:
+        System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "Global\BallScannerApp") p .R0'
+        ${If} $R0 != 0
+            System::Call 'kernel32::CloseHandle(p R0)'
+            ${If} ${Silent}
+                Abort
+            ${Else}
+                MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST \
+                    "Ball Scanner is currently running. Please close the application and click Retry." \
+                    IDRETRY check_loop
+                Abort
+            ${EndIf}
+        ${EndIf}
+!macroend
+
+!macro un.CheckAppNotRunning
+    un_check_loop:
+        System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "Global\BallScannerApp") p .R0'
+        ${If} $R0 != 0
+            System::Call 'kernel32::CloseHandle(p R0)'
+            ${If} ${Silent}
+                Abort
+            ${Else}
+                MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST \
+                    "Ball Scanner is currently running. Please close the application and click Retry." \
+                    IDRETRY un_check_loop
+                Abort
+            ${EndIf}
+        ${EndIf}
+!macroend
+
+; ! --- 14. Вызов окна выбора языка при состоянии .onInit | Callback Function до вызова основного окна installer | REQUIRED
 Function .onInit
     ${IfNot} ${RunningX64}
-        MessageBox MB_OK|MB_ICONSTOP "This installer requires 64-bit Windows."
-        Abort
+        ${If} ${Silent}
+            SetErrorLevel 1
+            Abort
+        ${Else}
+            MessageBox MB_OK|MB_ICONSTOP "This installer requires 64-bit Windows."
+            Abort
+        ${EndIf}
     ${EndIf}
 
-    ; * --- 12.1. Режим работы установщиека в 64-bit режиме | Для всего installer
+    ; * --- 14.1. Проверка: Ball Scanner не запущен
+    !insertmacro CheckAppNotRunning
+
+    ; * --- 14.2. Режим работы установщиека в 64-bit режиме | Для всего installer
     SetRegView 64
 
-    ; * --- 12.2. Вызов странички выбора языка
+    ; * --- 14.3. Вызов странички выбора языка
     !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
-; ! --- 13. Вызов окна выбора языка при состоянии un.onInit | Callback Function до вызова основного окна uninstaller | REQUIRED
+; ! --- 15. Вызов окна выбора языка при состоянии un.onInit | Callback Function до вызова основного окна uninstaller | REQUIRED
 Function un.onInit
     ${IfNot} ${RunningX64}
-        MessageBox MB_OK|MB_ICONSTOP "This uninstaller requires 64-bit Windows."
-        Abort
+        ${If} ${Silent}
+            SetErrorLevel 1
+            Abort
+        ${Else}
+            MessageBox MB_OK|MB_ICONSTOP "This uninstaller requires 64-bit Windows."
+            Abort
+        ${EndIf}
     ${EndIf}
 
-    ; * --- 13.1. Режим работы установщиека в 64-bit режиме | Для всего uninstaller
+    ; * --- 15.1. Проверка: Ball Scanner не запущен
+    !insertmacro un.CheckAppNotRunning
+
+    ; * --- 15.2. Режим работы установщиека в 64-bit режиме | Для всего uninstaller
     SetRegView 64
 
-    ; * --- 13.2. Вызов странички выбора языка
+    ; * --- 15.3. Вызов странички выбора языка
     !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
