@@ -85,7 +85,7 @@ namespace BallScanner
                     Current.Resources.MergedDictionaries.Insert(resourcePosition, newDictionary);
                 }
 
-                //4. Save new app language 
+                //4. Save new app language
                 BallScanner.Properties.Settings.Default.Language = Language;
                 BallScanner.Properties.Settings.Default.Save();
             }
@@ -230,28 +230,17 @@ namespace BallScanner
 
         public static void WriteMsg2Log(string msg, LoggerTypes type)
         {
-            if (CurrentUser != null)
-            {
-                Logger log = LogManager.GetLogger(GetCurrentUserFullName());
+            // Убираем проверку на null, даем логгеру дефолтное имя
+            string loggerName = CurrentUser != null ? GetCurrentUserFullName() : "Неавторизованный пользователь";
+            Logger log = LogManager.GetLogger(loggerName);
 
-                switch (type)
-                {
-                    case LoggerTypes.DEBUG:
-                        log.Debug(msg);
-                        break;
-                    case LoggerTypes.INFO:
-                        log.Info(msg);
-                        break;
-                    case LoggerTypes.WARN:
-                        log.Warn(msg);
-                        break;
-                    case LoggerTypes.ERROR:
-                        log.Error(msg);
-                        break;
-                    case LoggerTypes.FATAL:
-                        log.Fatal(msg);
-                        break;
-                }
+            switch (type)
+            {
+                case LoggerTypes.DEBUG: log.Debug(msg); break;
+                case LoggerTypes.INFO: log.Info(msg); break;
+                case LoggerTypes.WARN: log.Warn(msg); break;
+                case LoggerTypes.ERROR: log.Error(msg); break;
+                case LoggerTypes.FATAL: log.Fatal(msg); break;
             }
         }
 

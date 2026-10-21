@@ -111,14 +111,22 @@ Section "-Install"
         DetailPrint "Failed to grant permissions on $INSTDIR\Data. Exit code: $0"
     ${EndIf}
 
-    ; * --- 8.5. Создаем uninstaller.exe файл
+    ; * --- 8.5. Создаём папку Logs и выдаём на неё права
+    CreateDirectory "$INSTDIR\Logs"
+    nsExec::ExecToLog 'icacls "$INSTDIR\Logs" /grant *S-1-5-32-545:(OI)(CI)F /T /C /Q'
+    Pop $0
+    ${If} $0 != 0
+        DetailPrint "Failed to grant permissions on $INSTDIR\Logs. Exit code: $0"
+    ${EndIf}
+
+    ; * --- 8.6. Создаем uninstaller.exe файл
     WriteUninstaller "$INSTDIR\Uninstall ${APP_NAME}.exe"
 
-    ; * --- 8.6. Создаем папку в Start Menu folder и создаем ярлык для Start Menu для uninstaller
+    ; * --- 8.7. Создаем папку в Start Menu folder и создаем ярлык для Start Menu для uninstaller
     CreateDirectory "$SMPROGRAMS\${APP_FOLDER}"
     CreateShortcut "$SMPROGRAMS\${APP_FOLDER}\Uninstall ${APP_NAME}.lnk" "$INSTDIR\Uninstall ${APP_NAME}.exe"
 
-    ; * --- 8.7. Запись данных о программе в реестр Windows
+    ; * --- 8.8. Запись данных о программе в реестр Windows
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "DisplayName"     "${APP_NAME}"
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "DisplayVersion"  "${APP_VERSION}"
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "Publisher"       "${APP_PUBLISHER}"
