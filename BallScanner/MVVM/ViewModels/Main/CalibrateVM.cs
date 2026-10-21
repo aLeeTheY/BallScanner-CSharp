@@ -189,15 +189,27 @@ namespace BallScanner.MVVM.ViewModels.Main
             FirstThreshold = Properties.Settings.Default.FirstThreshold;
             SecondThreshold = Properties.Settings.Default.SecondThreshold;
 
-            //Fraction = Properties.Settings.Default.Fraction;
-            //Partia_Number = Properties.Settings.Default.Partia_Number;
-
             ChangeImageCommand = new RelayCommand(ChangeImage);
         }
 
+        // ТЕПЕРЬ ЭТОТ МЕТОД БЕЗОПАСНО ОБНОВЛЯЕТ UI ИЗ ФОНОВОГО ПОТОКА
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             CurrentProgress = e.ProgressPercentage;
+
+            // Если пришли данные конкретной строки (для кнопки "Выполнить")
+            if (e.UserState is object[] rowData)
+            {
+                int index = (int)rowData[0];
+                int blackPixels = (int)rowData[1];
+                BallGrade grade = (BallGrade)rowData[2];
+
+                if (Data != null && index >= 0 && index < Data.Length)
+                {
+                    Data[index].NumberOfBlackPixels = blackPixels;
+                    Data[index].BallGrade = grade;
+                }
+            }
         }
 
         private void OnPerformAction(object param)
@@ -209,65 +221,62 @@ namespace BallScanner.MVVM.ViewModels.Main
 
                     if (worker_DownloadExecute == null || (worker_DownloadExecute != null && !worker_DownloadExecute.IsBusy))
                     {
+                        OpenFileDialog openFile = new OpenFileDialog();
+                        openFile.Filter = "JPEG/JPG - JPG Files|*.jpeg;*.jpg|BMP - Windows Bitmap|*.bmp|PNG - Portable Network Graphics|*.png";
+                        openFile.Multiselect = true;
+
+                        if (openFile.ShowDialog() != true) break;
+
+                        string[] fileNames = openFile.FileNames;
+                        string[] safeFileNames = openFile.SafeFileNames;
+
                         worker_DownloadExecute = new BackgroundWorker();
                         worker_DownloadExecute.WorkerReportsProgress = false;
                         worker_DownloadExecute.WorkerSupportsCancellation = false;
-                        //worker.ProgressChanged += ProgressChanged;
-                        worker_DownloadExecute.DoWork += delegate
+
+                        worker_DownloadExecute.DoWork += delegate (object sender, DoWorkEventArgs e)
                         {
                             try
                             {
-                                OpenFileDialog openFile = new OpenFileDialog();
-                                openFile.Filter = "JPEG/JPG - JPG Files|*.jpeg;*.jpg|BMP - Windows Bitmap|*.bmp|PNG - Portable Network Graphics|*.png";
-                                openFile.Multiselect = true;
-
-                                if (openFile.ShowDialog() == true)
+                                var tempData = new ImageData[fileNames.Length];
+                                for (int i = 0; i < tempData.Length; i++)
                                 {
-                                    ImagesCount = openFile.FileNames.Length;
-                                    Data = new ImageData[ImagesCount];
-                                    currentImageIndex = 0;
-                                    CurrentProgress = 0;
-
-                                    int id = 1;
-                                    for (int i = 0; i < Data.Length; i++)
+                                    tempData[i] = new ImageData()
                                     {
-                                        Data[i] = new ImageData()
-                                        {
-                                            Id = id,
-                                            Name = openFile.SafeFileNames[i],
-                                            ImagePath = openFile.FileNames[i],
-                                            NumberOfBlackPixels = 0,
-                                            BallGrade = BallGrade.INDEFINED
-                                        };
-
-                                        if (i == 0) OnPropertyChanged(nameof(CurrentData));
-                                        id++;
-                                    }
-
-                                    UpdateImage(0);
+                                        Id = i + 1,
+                                        Name = safeFileNames[i],
+                                        ImagePath = fileNames[i],
+                                        NumberOfBlackPixels = 0,
+                                        BallGrade = BallGrade.INDEFINED
+                                    };
                                 }
-                            }
-                            catch (FileNotFoundException ex)
-                            {
-                                App.WriteMsg2Log("Ошибка \"" + nameof(FileNotFoundException) + "\"! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.ERROR);
-                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleFileNotFound"), MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            catch (ArgumentException ex)
-                            {
-                                App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\"! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.ERROR);
-                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleArgument"), MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            catch (UriFormatException ex)
-                            {
-                                App.WriteMsg2Log("Ошибка \"" + nameof(UriFormatException) + "\"! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.ERROR);
-                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUriFormat"), MessageBoxButton.OK, MessageBoxImage.Error);
+                                e.Result = tempData;
                             }
                             catch (Exception ex)
                             {
-                                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
-                                MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error);
+                                App.WriteMsg2Log("Ошибка при загрузке: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                                e.Result = null;
                             }
                         };
+
+                        worker_DownloadExecute.RunWorkerCompleted += delegate (object sender, RunWorkerCompletedEventArgs e)
+                        {
+                            if (e.Result is ImageData[] tempData && tempData.Length > 0)
+                            {
+                                ImagesCount = tempData.Length;
+                                Data = tempData;
+                                currentImageIndex = 0;
+                                CurrentProgress = 0;
+
+                                OnPropertyChanged(nameof(CurrentData));
+                                UpdateImage(0);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Не удалось загрузить данные изображений.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        };
+
                         worker_DownloadExecute.RunWorkerAsync();
                     }
                     break;
@@ -309,20 +318,13 @@ namespace BallScanner.MVVM.ViewModels.Main
                                 long sum = 0;
 
                                 byte threshold = ThresholdValue;
-
                                 int first = FirstThreshold;
                                 int second = SecondThreshold;
 
                                 ImageData[] data = Data;
                                 int total = data.Length;
-
-                                // Число ядер процессора
                                 int cores = Environment.ProcessorCount;
 
-                                // обновлять прогресс раз в 5 картинок (для партии из 100 — 20 обновлений)
-                                //int reportEvery = Math.Max(1, total / 50);
-
-                                // Параллельность только по картинкам
                                 Parallel.For(0, data.Length, new ParallelOptions
                                 {
                                     MaxDegreeOfParallelism = cores
@@ -335,23 +337,19 @@ namespace BallScanner.MVVM.ViewModels.Main
                                     else if (blackPixels <= second) grade = BallGrade.SECOND;
                                     else grade = BallGrade.DEFECTIVE;
 
-                                    // Обновляем картинку сразу — таблица наполняется в реальном времени
-                                    data[i].NumberOfBlackPixels = blackPixels;
-                                    data[i].BallGrade = grade;
-
                                     Interlocked.Add(ref sum, blackPixels);
                                     int currentProgress = Interlocked.Increment(ref progress);
 
-                                    // Progress bar обновляется на каждой картинке
-                                    worker_DownloadExecute.ReportProgress(currentProgress);
-
-                                    //if (currentProgress % reportEvery == 0 || currentProgress == total)
-                                    //{
-                                    //    worker_DownloadExecute.ReportProgress(currentProgress);
-                                    //}
+                                    // БЕЗОПАСНО отправляем данные в UI-поток
+                                    worker_DownloadExecute.ReportProgress(currentProgress, new object[] { i, blackPixels, grade });
                                 });
 
-                                AvgNumBlackPixels = sum / total;
+                                // Обновляем среднее значение ТОЛЬКО в UI-потоке
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    AvgNumBlackPixels = sum / total;
+                                });
+
                                 App.WriteMsg2Log($"Завершено сканирование {total} изображений на странице \"Калибровка\"! Среднее число чёрных пикселей = {AvgNumBlackPixels}. Пороговое значение ползунка = {threshold}. Первое пороговое значение = {first}. Второе пороговое значение = {second}.", LoggerTypes.INFO);
                             }
                         };
@@ -381,10 +379,8 @@ namespace BallScanner.MVVM.ViewModels.Main
                 try
                 {
                     int stride = data.Stride;
-
                     int width = original.Width;
                     int height = original.Height;
-
                     byte* ptr = (byte*)data.Scan0;
 
                     int count = 0;
@@ -398,13 +394,10 @@ namespace BallScanner.MVVM.ViewModels.Main
                             int g = row[offset + 1];
                             int r = row[offset + 2];
 
-                            // Целочисленный grayscale (быстрее float-матрицы в 3-4 раза)
                             int gray = (r * 77 + g * 150 + b * 29) >> 8;
-
                             if (gray < threshold) count++;
                         }
                     }
-
                     return count;
                 }
                 finally { original.UnlockBits(data); }
@@ -420,10 +413,8 @@ namespace BallScanner.MVVM.ViewModels.Main
             try
             {
                 int stride = data.Stride;
-
                 int width = original.Width;
                 int height = original.Height;
-
                 byte* ptr = (byte*)data.Scan0;
 
                 for (int y = 0; y < height; y++)
@@ -458,59 +449,61 @@ namespace BallScanner.MVVM.ViewModels.Main
 
             await Task.Delay(delay);
 
+            if (Data == null || Data.Length == 0 || currentImageIndex < 0 || currentImageIndex >= Data.Length) return;
+
+            // Запоминаем путь локально, чтобы избежать ошибок при изменении массива Data во время работы
+            string imagePath = Data[currentImageIndex].ImagePath;
+
             if (delay == 0 || (myImageIndex == currentImageIndex && myDecodePixelHeight == DecodePixelHeight && myThresholdValue == ThresholdValue))
             {
-                //if (Data == null || Data.Length == 0 || currentImageIndex < 0 || currentImageIndex > Data.Length - 1) return;
+                BitmapImage resultImage = null;
+
                 await Task.Run(() =>
                 {
-                    Bitmap original = null;
-
                     try
                     {
-                        original = GetThresholdBitmap(Data[currentImageIndex].ImagePath, (byte)myThresholdValue);
-
-                        // actually ?
-                        if (myImageIndex != currentImageIndex) return;
-
-                        // bitmap to bitmap image
-                        using (MemoryStream memory = new MemoryStream())
+                        using (Bitmap original = GetThresholdBitmap(imagePath, (byte)myThresholdValue))
                         {
-                            original.Save(memory, ImageFormat.Bmp);
-                            int imgHeight = original.Height;
-                            memory.Position = 0;
-
-                            BitmapImage bitmapImage = new BitmapImage();
-                            bitmapImage.BeginInit();
-                            bitmapImage.StreamSource = memory;
-                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-
-                            if (imgHeight > DecodePixelHeight)
-                                bitmapImage.DecodePixelHeight = DecodePixelHeight;
-
-                            bitmapImage.EndInit();
-                            bitmapImage.Freeze();
-
                             if (myImageIndex != currentImageIndex) return;
 
-                            CurrentImage = bitmapImage;
-                        }
+                            using (MemoryStream memory = new MemoryStream())
+                            {
+                                original.Save(memory, ImageFormat.Bmp);
+                                int imgHeight = original.Height;
+                                memory.Position = 0;
 
+                                BitmapImage bitmapImage = new BitmapImage();
+                                bitmapImage.BeginInit();
+                                bitmapImage.StreamSource = memory;
+                                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+
+                                if (imgHeight > myDecodePixelHeight)
+                                    bitmapImage.DecodePixelHeight = myDecodePixelHeight;
+
+                                bitmapImage.EndInit();
+                                bitmapImage.Freeze();
+
+                                resultImage = bitmapImage;
+                            }
+                        }
                     }
                     catch (ArgumentException e)
                     {
                         App.WriteMsg2Log("Ошибка \"" + nameof(ArgumentException) + "\" в методе \"" + nameof(UpdateImage) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.ERROR);
-                        MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleArgument"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        Application.Current.Dispatcher.Invoke(() => MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleArgument"), MessageBoxButton.OK, MessageBoxImage.Error));
                     }
                     catch (Exception e)
                     {
                         App.WriteMsg2Log("Непредвиденная ошибка в методе \"" + nameof(UpdateImage) + "\". Активная страница \"Калибровка\". Текст ошибки: " + App.GetFullExceptionMessage(e), LoggerTypes.FATAL);
-                        MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    finally
-                    {
-                        original?.Dispose();
+                        Application.Current.Dispatcher.Invoke(() => MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(e), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error));
                     }
                 });
+
+                // Присваиваем картинку в UI-потоке
+                if (resultImage != null && myImageIndex == currentImageIndex)
+                {
+                    CurrentImage = resultImage;
+                }
             }
         }
 

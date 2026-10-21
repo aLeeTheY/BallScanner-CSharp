@@ -6,14 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Timers;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace BallScanner.MVVM.ViewModels.Main
 {
     public class AccountManagmentVM : PageVM
     {
-        private static Timer timer = new Timer(400) { Enabled = false };
+        // DispatcherTimer работает в UI-потоке → краша с потоками не будет
+        private readonly DispatcherTimer timer;
 
         public static RelayCommand RefreshDataGrid { get; set; }
         public RelayCommand OpenDialogWindowCommand { get; set; }
@@ -67,6 +68,14 @@ namespace BallScanner.MVVM.ViewModels.Main
 
         public AccountManagmentVM()
         {
+            // Таймер в UI-потоке
+            timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
+            timer.Tick += (s, e) =>
+            {
+                timer.Stop();
+                Search(null);
+            };
+
             OpenDialogWindowCommand = new RelayCommand(OpenDialogWindow);
             SearchCommand = new RelayCommand(Search);
             AddUser_Command = new RelayCommand(AddUser);
@@ -83,20 +92,11 @@ namespace BallScanner.MVVM.ViewModels.Main
                 App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
                 MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
-
-            timer.Elapsed += new ElapsedEventHandler(OnSearch);
         }
 
         private void OnRefreshDataGrid(object param)
         {
-            if (Search_Value != null || Search_Value != "" || Search_Value.Length != 0) Search(null);
-            else OnPropertyChanged(nameof(Users));
-        }
-
-        private void OnSearch(object source, ElapsedEventArgs e)
-        {
-            timer.Stop();
-            //Console.WriteLine("ПРОШЛО 400 мс.!");
+            // Просто переприменяем фильтр (или показываем всё)
             Search(null);
         }
 
@@ -106,154 +106,114 @@ namespace BallScanner.MVVM.ViewModels.Main
             {
                 AppDbContext dbContext = AppDbContext.GetInstance();
 
-                //Console.WriteLine("SEARCH VALUE = " + Search_Value);
+                // Один запрос, дальше фильтрация в памяти — убирает N+1 и фризы
+                var allUsers = dbContext.Users.ToList();
 
-                if (Search_Value == null || Search_Value == "" || Search_Value.Length == 0)
+                if (string.IsNullOrEmpty(Search_Value))
                 {
-                    Users = new ObservableCollection<User>(dbContext.Users.ToList());
+                    Users = new ObservableCollection<User>(allUsers);
                     return;
                 }
 
-                List<User> search_result;
+                string search = Search_Value.Trim();
+                List<User> search_result = null;
+
                 switch (Selected_Index)
                 {
-                    case 0:
+                    case 0: // Логин
                         App.WriteMsg2Log("Поиск пользователей на странице \"Администрирование\" по параметру \"Логин\"", LoggerTypes.INFO);
-
-                        // login
-                        search_result = (from user in dbContext.Users
-                                         where user._username.Equals(Search_Value)
-                                         select user).ToList();
-
-                        if (search_result != null)
-                            Users = new ObservableCollection<User>(search_result);
-
+                        search_result = allUsers
+                            .Where(u => string.Equals(u._username, search, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
                         break;
-                    case 1:
+
+                    case 1: // Фамилия
                         App.WriteMsg2Log("Поиск пользователей на странице \"Администрирование\" по параметру \"Фамилия\"", LoggerTypes.INFO);
-
-                        // surname
-                        search_result = (from user in dbContext.Users
-                                         where user._surname.Equals(Search_Value)
-                                         select user).ToList();
-
-                        if (search_result != null)
-                            Users = new ObservableCollection<User>(search_result);
-
+                        search_result = allUsers
+                            .Where(u => string.Equals(u._surname, search, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
                         break;
-                    case 2:
+
+                    case 2: // Имя
                         App.WriteMsg2Log("Поиск пользователей на странице \"Администрирование\" по параметру \"Имя\"", LoggerTypes.INFO);
-
-                        // name
-                        search_result = (from user in dbContext.Users
-                                         where user._name.Equals(Search_Value)
-                                         select user).ToList();
-
-                        if (search_result != null)
-                            Users = new ObservableCollection<User>(search_result);
-
+                        search_result = allUsers
+                            .Where(u => string.Equals(u._name, search, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
                         break;
-                    case 3:
+
+                    case 3: // Отчество
                         App.WriteMsg2Log("Поиск пользователей на странице \"Администрирование\" по параметру \"Отчество\"", LoggerTypes.INFO);
-
-                        // lastname
-                        search_result = (from user in dbContext.Users
-                                         where user._lastname.Equals(Search_Value)
-                                         select user).ToList();
-
-                        if (search_result != null)
-                            Users = new ObservableCollection<User>(search_result);
-
+                        search_result = allUsers
+                            .Where(u => string.Equals(u._lastname, search, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
                         break;
-                    case 4:
+
+                    case 4: // Номер смены
                         App.WriteMsg2Log("Поиск пользователей на странице \"Администрирование\" по параметру \"Номер смены\"", LoggerTypes.INFO);
-
-                        // smena_number
-                        search_result = (from user in dbContext.Users
-                                         where user._smena_number.ToString().Equals(Search_Value)
-                                         select user).ToList();
-
-                        if (search_result != null)
-                            Users = new ObservableCollection<User>(search_result);
-
+                        search_result = allUsers
+                            .Where(u => u._smena_number.ToString() == search)
+                            .ToList();
                         break;
-                    case 5:
+
+                    case 5: // Уровень доступа
                         App.WriteMsg2Log("Поиск пользователей на странице \"Администрирование\" по параметру \"Уровень доступа\"", LoggerTypes.INFO);
 
-                        // access level
-                        switch (Search_Value.ToUpper())
+                        search_result = new List<User>();
+                        switch (search.ToUpperInvariant())
                         {
                             case "ПОЛЬЗОВАТЕЛЬ":
                             case "USER":
-                                search_result = (from user in dbContext.Users
-                                                 where user._access_level == 0
-                                                 select user).ToList();
+                                search_result = allUsers.Where(u => u._access_level == 0).ToList();
                                 break;
                             case "АДМИНИСТРАТОР":
+                            case "АДМИН":
                             case "ADMINISTRATOR":
-                                search_result = (from user in dbContext.Users
-                                                 where user._access_level == 1
-                                                 select user).ToList();
-                                break;
-                            default:
-                                search_result = (from user in dbContext.Users
-                                                 where user._access_level.ToString().Equals(Search_Value)
-                                                 select user).ToList();
+                            case "ADMIN":
+                                search_result = allUsers.Where(u => u._access_level == 1).ToList();
                                 break;
                         }
-
-                        if (search_result != null)
-                            Users = new ObservableCollection<User>(search_result);
-
                         break;
-                    case 6:
+
+                    case 6: // Статус аккаунта
                         App.WriteMsg2Log("Поиск пользователей на странице \"Администрирование\" по параметру \"Статус аккаунта\"", LoggerTypes.INFO);
 
-                        // is active user
-                        switch (Search_Value.ToUpper())
+                        search_result = new List<User>();
+                        switch (search.ToUpperInvariant())
                         {
                             case "АКТИВЕН":
                             case "ACTIVE":
-                                search_result = (from user in dbContext.Users
-                                                 where user._is_active == 1
-                                                 select user).ToList();
+                                search_result = allUsers.Where(u => u._is_active == 1).ToList();
                                 break;
                             case "НЕАКТИВЕН":
                             case "INACTIVE":
-                                search_result = (from user in dbContext.Users
-                                                 where user._is_active == 0
-                                                 select user).ToList();
-                                break;
-                            default:
-                                search_result = (from user in dbContext.Users
-                                                 where user._is_active.ToString().Equals(Search_Value)
-                                                 select user).ToList();
+                                search_result = allUsers.Where(u => u._is_active == 0).ToList();
                                 break;
                         }
-
-                        if (search_result != null)
-                            Users = new ObservableCollection<User>(search_result);
-
                         break;
                 }
+
+                Users = new ObservableCollection<User>(search_result ?? new List<User>());
             }
             catch (Exception ex)
             {
-                App.WriteMsg2Log("Непредвиденнная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
+                App.WriteMsg2Log("Непредвиденная ошибка во время выполнения! Текст ошибки: " + App.GetFullExceptionMessage(ex), LoggerTypes.FATAL);
                 MessageBox.Show(App.L("LangRes_Msg_ErrorPrefix") + App.GetFullExceptionMessage(ex), App.L("LangRes_Msg_TitleUnexpected"), MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             }
         }
 
         private void OpenDialogWindow(object param)
         {
-            if (param != null)
+            if (param is User user)
             {
-                App.WriteMsg2Log("Открытие окна редактирования пользователя. Пользователь #" + (param as User)._id + ". Страница \"Администрирование\".", LoggerTypes.INFO);
+                App.WriteMsg2Log("Открытие окна редактирования пользователя. Пользователь #" + user._id + ". Страница \"Администрирование\".", LoggerTypes.INFO);
 
-                Views.Edit.RootV editWindow = new Views.Edit.RootV(param);
+                Views.Edit.RootV editWindow = new Views.Edit.RootV(user);
                 editWindow.ShowDialog();
 
                 App.WriteMsg2Log("Закрытие окна редактирования пользователя!", LoggerTypes.INFO);
+
+                // Обновляем список после редактирования
+                OnRefreshDataGrid(null);
             }
         }
 
@@ -265,6 +225,9 @@ namespace BallScanner.MVVM.ViewModels.Main
             addWindow.ShowDialog();
 
             App.WriteMsg2Log("Закрытие окна добавления пользователя!", LoggerTypes.INFO);
+
+            // Обновляем список после добавления
+            OnRefreshDataGrid(null);
         }
 
         public override void ChangePalette()

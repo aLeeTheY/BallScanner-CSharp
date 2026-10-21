@@ -39,7 +39,7 @@ namespace BallScanner.MVVM.ViewModels.Add
             }
         }
 
-        private string _lastname;
+        private string _lastname = "-";
         public string Lastname
         {
             get => _lastname;
@@ -212,13 +212,18 @@ namespace BallScanner.MVVM.ViewModels.Add
                     return;
                 }
 
-                user = new User(Surname, Name, Lastname, smena_number_value, Login, SHAService.ComputeSha256Hash(Password));
+                // Lastname по умолчанию "-"
+                string lastname = string.IsNullOrWhiteSpace(Lastname) ? "-" : Lastname.Trim();
+
+                // новый юзер
+                user = new User(Surname, Name, lastname, smena_number_value, Login, SHAService.ComputeSha256Hash(Password));
 
                 dbContext.Users.Add(user);
                 dbContext.SaveChanges();
 
                 // Clear fields
-                Surname = Name = Lastname = Login = Smena_Number = Password = Password_Check = null;
+                Surname = Name = Login = Smena_Number = Password = Password_Check = null;
+                Lastname = "-";
 
                 // Refresh datagrid
                 if (AccountManagmentVM.RefreshDataGrid.CanExecute(null))
