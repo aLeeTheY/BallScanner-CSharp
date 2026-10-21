@@ -1,0 +1,12 @@
+[A] PROCESSING ONE VIDEO FILE:
+ffmpeg -i desktop__full.mp4 -filter_complex "[0]setpts=0.75*PTS,fps=10,scale=-1:480:flags=lanczos,split[x][z];[x]palettegen=max_colors=256:stats_mode=diff[p];[z][p]paletteuse=dither=heckbert:bayer_scale=3" 01__website_walkthrough.gif
+
+
+[B] PROCESSING TWO VIDEO FILES:
+0. Make two MP4 walkthrough videos | desktop & mobile (they can be of unequal height).
+
+1. Make combined Gif:
+ffmpeg -i desktop__full.mp4 -i mobile__full.mp4 -filter_complex "[0]setpts=0.75*PTS, scale=-1:480:flags=lanczos[desk];[1]setpts=0.75*PTS, scale=-1:480:flags=lanczos,format=rgba[mob];[desk]pad=iw+16:ih:0:0:color=black@0,format=rgba[left];[left][mob]hstack,fps=10,split[x][z];[x]palettegen=max_colors=256:reserve_transparent=1:stats_mode=diff[p];[z][p]paletteuse=dither=heckbert:bayer_scale=3" 01__website_walkthrough.gif
+
+2. Optimize Gif size manually (or at https://ezgif.com/optimize):
+gifsicle -O3 01__website_walkthrough.gif -o 01__website_walkthrough__optimized.gif
