@@ -134,7 +134,7 @@ Section "-Install"
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "URLInfoAbout"    "${APP_URL}"
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "UninstallString" "$\"$INSTDIR\Uninstall ${APP_NAME}.exe$\""
     WriteRegStr   HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "DisplayIcon"     "$INSTDIR\${APP_EXE}"
-    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "EstimatedSize"   19900
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_FOLDER}" "EstimatedSize"   20324
 SectionEnd
 
 ; ! --- 9. Секция .NET Framework 4.8 | Обязательная | Пропускается, если .NET уже стоит
